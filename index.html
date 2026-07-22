@@ -704,12 +704,12 @@
     if (!videoA || !videoB) return;
     const FADE = 2.5;
     let ready = false;
-    videoA.playbackRate = 0.5;
-    videoB.playbackRate = 0.5;
+    videoA.playbackRate = 0.75;
+    videoB.playbackRate = 0.75;
     videoA.addEventListener('loadedmetadata', () => {
-      videoA.playbackRate = 0.5;
+      videoA.playbackRate = 0.75;
       videoB.currentTime = videoA.duration / 2;
-      videoB.playbackRate = 0.5;
+      videoB.playbackRate = 0.75;
       ready = true;
     });
     function watch(active, other, activeIsA) {
