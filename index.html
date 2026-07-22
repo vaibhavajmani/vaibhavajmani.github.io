@@ -87,12 +87,16 @@
   }
   .sky-video {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    top: 50%;
+    left: 50%;
+    min-width: 100vw;
+    min-height: 100vh;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
     object-fit: cover;
     z-index: 0;
+    transition: opacity 500ms ease;
   }
   .sky-hero::after {
     content: "";
@@ -572,7 +576,7 @@
           <span class="title">Thinking in Systems</span>
           <span class="author">Donella Meadows</span>
         </div>
-        <p>Reset how I approach any problem: behaviour before structure, feedback loops before fixes. Taught me that leverage points are almost never where they appear to be.</p>
+        <p>Reset how I approach any problem: behaviour before structure, feedback loops before fixes. Taught me that leverage points are almost never where they appear to be. The book I return to most.</p>
       </div>
 
       <div class="book">
@@ -588,7 +592,7 @@
           <span class="title">You're Not Listening</span>
           <span class="author">Kate Murphy</span>
         </div>
-        <p>Reset how I run requirements conversations: listening is the work, not the setup. Argues that most misunderstandings are unheard people, not unclear people. Improved the quality of my calls.</p>
+        <p>Reset how I run requirements conversations: listening is the work, not the setup. Argues that most misunderstandings are unheard people, not unclear people. Changed the quality of my discovery interviews.</p>
       </div>
 
       <div class="book">
@@ -612,7 +616,7 @@
           <span class="title">Influence</span>
           <span class="author">Robert Cialdini</span>
         </div>
-        <p>A field guide to why people say yes. Useful to notice when it's being done to you and when you're doing it, the honest version of stakeholder work.</p>
+        <p>A field guide to why people say yes. Useful to notice when it's being done to you and when you're doing it, the honest version of stakeholder work. Read once, then reread the chapter you need.</p>
       </div>
 
     </div>
@@ -626,11 +630,11 @@
       <p class="feedback-sub">Human feedback, LLM feedback, or both are welcome. Feel free to copy this page into your favorite AI tool and share what it tells you.</p>
 
       <div class="ai-copy-row">
-        <button id="copy-for-ai" type="button">Working with AI? Copy this page for AI review</button>
+        <button id="copy-for-ai" type="button">Copy this page for AI review</button>
         <span id="copy-confirm" role="status" aria-live="polite"></span>
       </div>
 
-      <form class="feedback" action="https://formspree.io/f/mkodzyka" method="POST">
+      <form class="feedback" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
         <div>
           <label for="name">Name</label>
           <input type="text" id="name" name="name" required autocomplete="name">
@@ -659,9 +663,27 @@
   <div class="wrap">
     <p>Projects use fictional companies inspired by real-world industry patterns.</p>
     <p>Built and written by Vaibhav and Claude Opus 4.8.</p>
-    <p>v-AI. All rights reserved.</p>
+    <p>V-AI. All rights reserved.</p>
   </div>
 </footer>
+
+<script>
+  (function() {
+    const video = document.querySelector('.sky-video');
+    if (!video) return;
+    const FADE_WINDOW = 0.4;
+    video.addEventListener('timeupdate', () => {
+      if (video.duration && video.duration - video.currentTime < FADE_WINDOW) {
+        video.style.opacity = '0';
+      }
+    });
+    video.addEventListener('seeked', () => {
+      if (video.currentTime < FADE_WINDOW) {
+        setTimeout(() => { video.style.opacity = '1'; }, 500);
+      }
+    });
+  })();
+</script>
 
 <script>
   (function() {
