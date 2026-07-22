@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ProjectFlow - closing the gap between sales and support - Vaibhav Ajmani</title>
+<meta name="description" content="Business analysis case study: a SaaS company losing customers because sales and support worked from different systems. The problem, the options considered, and a phased plan to fix it." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  --text: #ffffff;
+  --text-soft: rgba(255, 255, 255, 0.80);
+  --muted: rgba(255, 255, 255, 0.58);
+  --line: rgba(255, 255, 255, 0.18);
+  --line-soft: rgba(255, 255, 255, 0.10);
+  --panel: rgba(18, 22, 30, 0.42);
+  --panel-log: rgba(10, 12, 18, 0.78);
+  --accent: #9cc7e0;
+  --success: #a8dfc8;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0d1420;
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+html { scroll-behavior: smooth; scroll-padding-top: 32px; }
+
+/* Sky video background - same pattern as main index */
+.sky-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  object-fit: cover;
+  z-index: -2;
+  filter: brightness(0.62);
+}
+
+.sky-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(6,10,18,0.30) 0%, rgba(6,10,18,0.55) 100%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-video { display: none; }
+  html, body { background: #1a2432; }
+}
+
+.mono { font-family: 'IBM Plex Mono', 'SF Mono', Menlo, monospace; }
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.container {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 40px 24px 96px;
+}
+
+/* Back link */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-soft);
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color 200ms ease;
+}
+.back:hover { border-bottom-color: var(--text-soft); }
+
+/* Header - matches main index headline treatment */
+.hero { margin-bottom: 56px; }
+.hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+h1 {
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 20px;
+  color: var(--text);
+}
+.intro {
+  font-size: 17px;
+  color: var(--text);
+  max-width: 720px;
+  margin: 0;
+  line-height: 1.6;
+}
+.disclaimer {
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 720px;
+  margin: 20px 0 0;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* On this page */
+.toc {
+  padding: 18px 22px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  margin: 0 0 48px;
+}
+.toc-label { margin-bottom: 14px; }
+.toc ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  counter-reset: toc;
+}
+.toc li {
+  counter-increment: toc;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.toc li::before {
+  content: counter(toc) ".";
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+.toc li a {
+  color: var(--text);
+  font-size: 14px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+.toc li a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Panel */
+.panel {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 4px;
+  padding: 22px;
+}
+
+/* Section headers */
+.section { margin-bottom: 48px; }
+.section-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+.section-lede {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0 0 18px;
+  max-width: 720px;
+}
+.sub-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 32px 0 12px;
+}
+
+p { color: var(--text-soft); max-width: 760px; line-height: 1.7; }
+p strong { color: var(--text); font-weight: 600; }
+
+ul.plain { list-style: none; margin: 0 0 18px; padding: 0; max-width: 760px; }
+ul.plain li {
+  color: var(--text-soft);
+  padding-left: 18px;
+  position: relative;
+  margin-bottom: 8px;
+  line-height: 1.7;
+}
+ul.plain li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 8px;
+  height: 1px;
+  background: var(--muted);
+}
+
+/* Table - matches architecture page */
+.table-wrap {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  margin-bottom: 26px;
+}
+.table-scroll { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  padding: 10px 14px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 11px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--text-soft);
+  vertical-align: top;
+}
+td:first-child { color: var(--text); }
+tr:last-child td { border-bottom: none; }
+.mono-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Flow diagram - reuses the event log treatment */
+.flow {
+  border: 1px solid var(--line);
+  background: var(--panel-log);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 4px;
+  padding: 20px 22px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.85);
+  overflow-x: auto;
+  margin-bottom: 26px;
+  white-space: pre;
+}
+.flow .pipe { color: var(--muted); }
+
+/* Story and option rows - reuses the rationale panel grid */
+.rationale-wrap {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  margin-bottom: 26px;
+}
+.rationale-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  padding: 22px 26px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.rationale-row:last-child { border-bottom: none; }
+@media (max-width: 640px) {
+  .rationale-row { grid-template-columns: 1fr; gap: 8px; }
+}
+.rationale-label { font-size: 16px; font-weight: 600; color: var(--text); }
+.rationale-body { font-size: 14px; line-height: 1.7; color: var(--text-soft); margin: 0; max-width: none; }
+.rationale-tradeoff {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 10px 0 0;
+  max-width: none;
+}
+
+.callout {
+  border: 1px solid var(--line-soft);
+  border-left: 2px solid var(--accent);
+  background: rgba(255,255,255,0.05);
+  border-radius: 2px;
+  padding: 16px 20px;
+  margin: 0 0 26px;
+  max-width: 760px;
+}
+.callout p { margin: 0; font-size: 14.5px; }
+
+.closing-note {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid var(--line-soft);
+  padding-top: 20px;
+  margin-top: 8px;
+  max-width: 760px;
+}
+
+/* Motion */
+@keyframes fadeRise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-rise { animation: fadeRise 600ms ease-out both; }
+
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-rise { animation: none; }
+  * { transition: none !important; }
+}
+
+.hidden { display: none !important; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  .container { padding: 28px 18px 72px; }
+  .hero { margin-bottom: 40px; }
+  .toc { margin-bottom: 36px; padding: 16px 18px; }
+  .toc ol { gap: 12px 20px; }
+  .toc li a { font-size: 15px; padding-bottom: 3px; }
+  .section { margin-bottom: 40px; }
+  .section-lede { font-size: 18px; }
+  .intro { font-size: 16px; }
+  .back { font-size: 14px; margin-bottom: 28px; padding: 4px 0; }
+  .flow { font-size: 11.5px; padding: 16px 16px; line-height: 1.8; }
+  .rationale-row { padding: 18px 18px; }
+  .callout { padding: 14px 16px; }
+  table { font-size: 13px; }
+  td, th { padding: 10px 12px; }
+  .table-scroll { -webkit-overflow-scrolling: touch; }
+  p, ul.plain, .callout, .closing-note, .intro, .disclaimer, .section-lede { max-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sky video background (matches main index) -->
+<video class="sky-video" autoplay muted loop playsinline aria-hidden="true">
+  <source src="sky.mp4" type="video/mp4">
+</video>
+<div class="sky-overlay" aria-hidden="true"></div>
+
+<div class="container">
+
+  <a href="index.html" class="back">&larr; Back to portfolio</a>
+
+  <div class="hero fade-rise">
+    <div class="hero-eyebrow">Analyst &middot; Owner</div>
+    <h1>Closing the gap between sales and support</h1>
+    <p class="intro">
+      ProjectFlow was losing customers, and the exit surveys kept saying the same
+      thing: support did not know who they were talking to. Sales ran on one
+      system, support ran on another, and the two never spoke. This case study
+      walks through the problem, the options considered, and a phased plan to
+      fix it.
+    </p>
+    <p class="disclaimer">
+      ProjectFlow is a fictional company. The problem and the numbers are
+      invented to make the analysis concrete, not drawn from any employer's
+      systems.
+    </p>
+  </div>
+
+  <nav class="toc fade-rise" aria-label="On this page">
+    <div class="eyebrow toc-label">On this page</div>
+    <ol>
+      <li><a href="#problem">The problem</a></li>
+      <li><a href="#scope">Stakeholders and scope</a></li>
+      <li><a href="#current">Current state</a></li>
+      <li><a href="#requirements">Requirements</a></li>
+      <li><a href="#future">Future state</a></li>
+      <li><a href="#options">Options considered</a></li>
+      <li><a href="#outcome">How success is measured</a></li>
+      <li><a href="#artifacts">Artifacts</a></li>
+    </ol>
+  </nav>
+
+  <div class="section fade-rise" id="problem">
+    <h2 class="section-title">The problem</h2>
+    <p class="section-lede">Two teams, two systems, one customer who noticed.</p>
+    <p>
+      ProjectFlow is a B2B project management tool. Sales runs on Salesforce.
+      Support runs on Zendesk. Neither system knows the other exists, and that
+      gap shows up in the work every day.
+    </p>
+    <ul class="plain">
+      <li>Support agents cannot see a customer's tier, contract value, or renewal date.</li>
+      <li>Sales reps cannot see open tickets when preparing for a renewal or an upsell.</li>
+      <li>Customer records are entered twice, so the two systems slowly drift apart.</li>
+      <li>An enterprise account waits in the same queue as a free-tier trial.</li>
+    </ul>
+    <div class="callout">
+      <p>
+        Churn rose 12 percent over two quarters. Exit surveys pointed at two
+        things: slow support, and support that did not know who the customer was.
+        The second one is the fixable one.
+      </p>
+    </div>
+  </div>
+
+  <div class="section fade-rise" id="scope">
+    <h2 class="section-title">Stakeholders and scope</h2>
+    <p class="section-lede">Five groups feel this problem, and they do not feel it the same way.</p>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Stakeholder</th><th>Role</th><th>What they need</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>VP of Sales</td><td>Sponsor</td><td>Better renewal rates and earlier warning on at-risk accounts</td></tr>
+            <tr><td>Head of Support</td><td>Primary user</td><td>Faster resolution, with customer context already on the ticket</td></tr>
+            <tr><td>CTO</td><td>Technical owner</td><td>An approach the team can maintain without a new service to own</td></tr>
+            <tr><td>Customer Success</td><td>End user</td><td>One view of account health across both tools</td></tr>
+            <tr><td>Engineering</td><td>Implementer</td><td>Clear requirements and a bounded piece of work</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3 class="sub-title">In scope</h3>
+    <ul class="plain">
+      <li>Two-way sync between Salesforce and Zendesk</li>
+      <li>Account data: tier, annual contract value, renewal date, assigned CSM</li>
+      <li>Ticket history surfaced on the Salesforce account record</li>
+      <li>Ticket priority set automatically from account tier</li>
+    </ul>
+
+    <h3 class="sub-title">Out of scope</h3>
+    <ul class="plain">
+      <li>Replacing either CRM</li>
+      <li>Billing system changes</li>
+      <li>Mobile application changes</li>
+    </ul>
+    <p>
+      The out-of-scope list matters as much as the in-scope one. Early
+      conversations kept drifting toward replacing Zendesk, which is a much
+      larger project that does not solve this problem any faster.
+    </p>
+  </div>
+
+  <div class="section fade-rise" id="current">
+    <h2 class="section-title">Current state</h2>
+    <p class="section-lede">How a ticket moves today.</p>
+
+<div class="flow">Customer submits a ticket in Zendesk
+<span class="pipe">        |</span>
+Agent opens it with no account context
+<span class="pipe">        |</span>
+Agent searches email or Slack to work out who this is
+<span class="pipe">        |</span>
+Agent resolves it without knowing tier or CSM
+<span class="pipe">        |</span>
+Nothing about the ticket reaches Salesforce
+<span class="pipe">        |</span>
+Sales rep walks into the renewal call unaware</div>
+
+    <h3 class="sub-title">Where the gaps are</h3>
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Gap</th><th>Cause</th><th>What it costs</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>No customer context in Zendesk</td><td>The systems are not connected</td><td>Slow, generic responses</td></tr>
+            <tr><td>Duplicate data entry</td><td>No single source of truth</td><td>Around 2 hours per agent per week</td></tr>
+            <tr><td>No ticket view in Salesforce</td><td>One-way silos</td><td>Renewal conversations go badly</td></tr>
+            <tr><td>No priority by tier</td><td>Triage is entirely manual</td><td>Enterprise treated like free tier</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-rise" id="requirements">
+    <h2 class="section-title">Requirements</h2>
+    <p class="section-lede">What the solution has to do, and what it has to be.</p>
+
+    <h3 class="sub-title">Functional</h3>
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Requirement</th><th>Priority</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="mono-id">FR-01</span></td><td>Zendesk tickets show account tier, contract value, and renewal date from Salesforce</td><td>High</td></tr>
+            <tr><td><span class="mono-id">FR-02</span></td><td>Salesforce accounts show open tickets and the last five resolved</td><td>High</td></tr>
+            <tr><td><span class="mono-id">FR-03</span></td><td>Enterprise tickets escalate to urgent priority automatically</td><td>High</td></tr>
+            <tr><td><span class="mono-id">FR-04</span></td><td>New Zendesk contacts reach Salesforce within 15 minutes</td><td>Medium</td></tr>
+            <tr><td><span class="mono-id">FR-05</span></td><td>The assigned CSM populates on the ticket</td><td>Medium</td></tr>
+            <tr><td><span class="mono-id">FR-06</span></td><td>Agents can flag a ticket as a renewal risk, visible to Sales</td><td>Medium</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3 class="sub-title">Non-functional</h3>
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Requirement</th><th>Why it is here</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="mono-id">NFR-01</span></td><td>Sync latency stays under 15 minutes</td><td>Slower than this and agents stop trusting the data</td></tr>
+            <tr><td><span class="mono-id">NFR-02</span></td><td>Agents do not switch tools for core work</td><td>A second tab is a workaround, not a fix</td></tr>
+            <tr><td><span class="mono-id">NFR-03</span></td><td>Data handling meets SOC 2 Type II requirements</td><td>Contract value moving between systems is customer data</td></tr>
+            <tr><td><span class="mono-id">NFR-04</span></td><td>Integration maintains 99.5 percent uptime</td><td>A silent sync failure is worse than no sync at all</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3 class="sub-title">User stories</h3>
+    <div class="rationale-wrap">
+      <div class="rationale-row">
+        <div class="rationale-label">Support agent</div>
+        <div>
+          <p class="rationale-body">
+            I want to see a customer's tier and renewal date when I open a
+            ticket, so I can judge how to respond before I start typing.
+          </p>
+          <p class="rationale-tradeoff">Accepted when: tier, contract value, and renewal date render on ticket open.</p>
+        </div>
+      </div>
+      <div class="rationale-row">
+        <div class="rationale-label">Sales rep</div>
+        <div>
+          <p class="rationale-body">
+            I want recent tickets on the account record, so I can raise a problem
+            in the renewal call before the customer does.
+          </p>
+          <p class="rationale-tradeoff">Accepted when: open tickets and last five resolved appear on the account.</p>
+        </div>
+      </div>
+      <div class="rationale-row">
+        <div class="rationale-label">Customer Success</div>
+        <div>
+          <p class="rationale-body">
+            I want to be assigned automatically to tickets on my accounts, so I
+            hear about trouble without having to watch for it.
+          </p>
+          <p class="rationale-tradeoff">Accepted when: CSM field populates within one sync cycle of ticket creation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-rise" id="future">
+    <h2 class="section-title">Future state</h2>
+    <p class="section-lede">The same ticket, once the two systems talk.</p>
+
+<div class="flow">Customer submits a ticket in Zendesk
+<span class="pipe">        |</span>
+Ticket is tagged with tier, contract value, and CSM from Salesforce
+<span class="pipe">        |</span>
+Enterprise tickets escalate to urgent automatically
+<span class="pipe">        |</span>
+Agent resolves it with the full picture
+<span class="pipe">        |</span>
+Ticket and resolution sync back to the account record
+<span class="pipe">        |</span>
+Sales rep sees the history before the renewal call</div>
+
+    <p>
+      Nothing in the agent's workflow changes. They open a ticket the same way
+      they always have. The difference is what is already on the screen when
+      they get there.
+    </p>
+  </div>
+
+  <div class="section fade-rise" id="options">
+    <h2 class="section-title">Options considered</h2>
+    <p class="section-lede">Three ways to connect two systems, and the reason for picking the smallest one.</p>
+
+    <div class="rationale-wrap">
+      <div class="rationale-row">
+        <div class="rationale-label">Native connector</div>
+        <div>
+          <p class="rationale-body">
+            The built-in Salesforce and Zendesk integration. It covers every
+            high-priority requirement out of the box, needs no new infrastructure,
+            and can be live in weeks rather than quarters.
+          </p>
+          <p class="rationale-tradeoff">Trade-off: limited customisation, no room for unusual workflows.</p>
+        </div>
+      </div>
+      <div class="rationale-row">
+        <div class="rationale-label">Integration platform</div>
+        <div>
+          <p class="rationale-body">
+            Sync flows built in a tool like Workato. More flexible, and it would
+            handle the renewal-risk flag more elegantly than the native connector
+            does.
+          </p>
+          <p class="rationale-tradeoff">Trade-off: subscription cost plus someone who owns the flows.</p>
+        </div>
+      </div>
+      <div class="rationale-row">
+        <div class="rationale-label">Custom build</div>
+        <div>
+          <p class="rationale-body">
+            Engineering writes the integration directly against both APIs. Full
+            control over every field and every edge case.
+          </p>
+          <p class="rationale-tradeoff">Trade-off: months of build, and a service the team owns forever.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p>
+        <strong>Recommendation:</strong> start with the native connector. It
+        meets every high-priority requirement, and it is reversible. Revisit the
+        integration platform only when a real workflow proves the connector
+        cannot do it. The custom build solves a problem ProjectFlow does not
+        have yet.
+      </p>
+    </div>
+
+    <h3 class="sub-title">Rollout</h3>
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Phase</th><th>Work</th><th>Duration</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Requirements sign-off with Sales, Support, and Engineering</td><td>2 weeks</td></tr>
+            <tr><td>2</td><td>Configuration and testing in a sandbox</td><td>3 weeks</td></tr>
+            <tr><td>3</td><td>Pilot with the support team only</td><td>2 weeks</td></tr>
+            <tr><td>4</td><td>Full rollout and training</td><td>1 week</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>
+      The pilot phase exists to catch the thing nobody wrote down. Two weeks
+      with one team is cheap. Discovering a broken field mapping after a
+      company-wide rollout is not.
+    </p>
+  </div>
+
+  <div class="section fade-rise" id="outcome">
+    <h2 class="section-title">How success is measured</h2>
+    <p class="section-lede">Four numbers, checked at 90 days.</p>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Measure</th><th>Today</th><th>Target</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>First response time</td><td>4.2 hours</td><td>Under 2 hours</td></tr>
+            <tr><td>Agent time spent hunting for context</td><td>Around 2 hours per week</td><td>Near zero</td></tr>
+            <tr><td>Renewal churn</td><td>12 percent</td><td>Under 7 percent</td></tr>
+            <tr><td>Enterprise escalation accuracy</td><td>Manual and inconsistent</td><td>Automatic on every ticket</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p>
+      Churn is the number the sponsor cares about, but it moves slowly and has
+      many causes. First response time and escalation accuracy move within weeks
+      and are attributable to this change, which makes them the honest early
+      signal.
+    </p>
+  </div>
+
+  <div class="section fade-rise" id="artifacts">
+    <h2 class="section-title">Artifacts</h2>
+    <p class="section-lede">What this analysis produced.</p>
+    <ul class="plain">
+      <li>Current state and future state process flows</li>
+      <li>Gap analysis mapping each pain point to a cause and a cost</li>
+      <li>Stakeholder register</li>
+      <li>Functional and non-functional requirements, prioritised</li>
+      <li>User stories with acceptance criteria</li>
+      <li>Options analysis with a recommendation and its reasoning</li>
+      <li>Phased rollout plan and measurement plan</li>
+    </ul>
+    <p class="closing-note">
+      A concept project. The company and the numbers are invented. The problem
+      is not.
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>
