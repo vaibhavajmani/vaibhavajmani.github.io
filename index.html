@@ -97,7 +97,7 @@
     transform: translate(-50%, -50%);
     object-fit: cover;
     filter: brightness(0.7);
-    z-index: -1;
+    z-index: 0;
     opacity: 0;
     transition: opacity 2500ms ease;
   }
@@ -224,6 +224,7 @@
 
   .below-hero {
     position: relative;
+    z-index: 1;
     background: rgba(0, 0, 0, 0.06);
     --ink: #ffffff;
     --muted: rgba(255, 255, 255, 0.82);
@@ -402,6 +403,7 @@
 
   footer {
     position: relative;
+    z-index: 1;
     padding: 40px 0 60px;
     border-top: 1px solid rgba(255, 255, 255, 0.22);
     background: rgba(0, 0, 0, 0.06);
