@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Architecture - vAI-RetailCo inventory sync - Vaibhav Ajmani</title>
+<meta name="description" content="Interactive walkthrough of a nightly CSV-to-API integration pipeline: SaaS export, Kafka broker, S3 archive, Bedrock extraction, Lambda dispatch, observability. Design and rationale by Vaibhav Ajmani." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  --text: #ffffff;
+  --text-soft: rgba(255, 255, 255, 0.80);
+  --muted: rgba(255, 255, 255, 0.58);
+  --line: rgba(255, 255, 255, 0.18);
+  --line-soft: rgba(255, 255, 255, 0.10);
+  --panel: rgba(18, 22, 30, 0.42);
+  --panel-log: rgba(10, 12, 18, 0.78);
+  --accent: #9cc7e0;
+  --success: #a8dfc8;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0d1420;
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* Sky video background - same pattern as main index */
+.sky-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -2;
+  filter: brightness(0.62);
+}
+
+.sky-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(6,10,18,0.30) 0%, rgba(6,10,18,0.55) 100%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-video { display: none; }
+  html, body { background: #1a2432; }
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', 'SF Mono', Menlo, monospace;
+}
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.container {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 40px 24px 96px;
+}
+
+/* Back link */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-soft);
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color 200ms ease;
+}
+.back:hover { border-bottom-color: var(--text-soft); }
+
+/* Header - matches main index headline treatment */
+.hero { margin-bottom: 56px; }
+.hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+h1 {
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 20px;
+  color: var(--text);
+}
+.intro {
+  font-size: 17px;
+  color: var(--text);
+  max-width: 720px;
+  margin: 0;
+  line-height: 1.6;
+}
+.disclaimer {
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 720px;
+  margin: 20px 0 0;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 16px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  margin: 0 0 32px;
+}
+.controls .grow { flex: 1; }
+.toggle {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.toggle button {
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--text-soft);
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.toggle button.active {
+  background: var(--text);
+  color: #0f1620;
+}
+.btn {
+  padding: 10px 18px;
+  background: var(--text);
+  color: #0f1620;
+  border: none;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+.btn:disabled { background: var(--muted); cursor: default; }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-soft);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+}
+
+/* Dropzone */
+.dropzone {
+  border: 1.5px dashed var(--line);
+  border-radius: 4px;
+  padding: 28px 20px;
+  text-align: center;
+  margin-bottom: 32px;
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  color: var(--text-soft);
+  font-size: 13px;
+}
+.dropzone.dragover { border-color: var(--accent); color: var(--accent); }
+
+/* Split view */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 24px;
+  margin-bottom: 48px;
+}
+@media (max-width: 780px) {
+  .split { grid-template-columns: 1fr; }
+}
+
+/* Panel */
+.panel {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 4px;
+  padding: 22px;
+}
+
+/* Pipeline */
+.stage { position: relative; }
+.stage-row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 10px 4px;
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: var(--text);
+}
+.stage-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: rgba(255,255,255,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 250ms ease;
+  color: var(--text-soft);
+}
+.stage.active .stage-icon {
+  background: var(--text);
+  color: #0f1620;
+  border-color: var(--text);
+  animation: pulseRing 1.2s ease-out infinite;
+}
+.stage.done .stage-icon {
+  background: var(--success);
+  color: #0f1620;
+  border-color: var(--success);
+}
+.stage-label { font-size: 15px; font-weight: 500; color: var(--text); }
+.stage-state {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+.stage-connector {
+  position: absolute;
+  left: 22px;
+  top: 60px;
+  width: 1.5px;
+  height: calc(100% - 56px);
+  background: var(--line);
+  transition: background 250ms ease;
+}
+.stage.done .stage-connector { background: var(--success); }
+.stage-inline {
+  margin: 4px 0 8px 60px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--line-soft);
+  border-left: 2px solid var(--accent);
+  border-radius: 2px;
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+.panel-note {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 10px 4px 0;
+  line-height: 1.5;
+}
+
+/* Log */
+.log {
+  border: 1px solid var(--line);
+  background: var(--panel-log);
+  backdrop-filter: blur(14px);
+  color: rgba(255,255,255,0.85);
+  border-radius: 4px;
+  padding: 18px;
+  font-size: 12px;
+  line-height: 1.7;
+  min-height: 360px;
+  max-height: 480px;
+  overflow-y: auto;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.log-empty { color: var(--muted); font-style: italic; }
+.log-line { margin-bottom: 6px; display: flex; gap: 10px; }
+.log-time { color: var(--muted); flex-shrink: 0; }
+.log-stage { color: var(--accent); flex-shrink: 0; }
+
+/* Table */
+.table-wrap {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+}
+.table-scroll { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+th {
+  text-align: left;
+  padding: 10px 14px;
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 11px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--line);
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--text);
+}
+.table-note {
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+
+/* Rationale panel */
+.rationale-wrap {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.rationale-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  padding: 22px 26px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.rationale-row:last-child { border-bottom: none; }
+@media (max-width: 640px) {
+  .rationale-row { grid-template-columns: 1fr; gap: 8px; }
+}
+.rationale-label { font-size: 16px; font-weight: 600; color: var(--text); }
+.rationale-body { font-size: 14px; line-height: 1.7; color: var(--text-soft); margin: 0; }
+.rationale-tradeoff {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 10px 0 0;
+}
+
+/* Section headers */
+.section { margin-bottom: 48px; }
+.section-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+
+/* Motion */
+@keyframes fadeRise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulseRing {
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+  100% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+}
+.fade-rise { animation: fadeRise 600ms ease-out both; }
+
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-rise, .stage.active .stage-icon { animation: none; }
+  * { transition: none !important; }
+}
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- Sky video background (matches main index) -->
+<video class="sky-video" autoplay muted loop playsinline poster="../sky-poster.jpg" aria-hidden="true">
+  <source src="../sky.mp4" type="video/mp4">
+</video>
+<div class="sky-overlay" aria-hidden="true"></div>
+
+<div class="container">
+
+  <a href="../index.html" class="back">&larr; Back to portfolio</a>
+
+  <div class="hero fade-rise">
+    <div class="hero-eyebrow">Engineer &middot; Architect</div>
+    <h1>A sales data pipeline that runs itself</h1>
+    <p class="intro">
+      vAI-RetailCo runs 340 stores. Every night, their point-of-sale SaaS exports
+      inventory adjustments as a CSV. The central inventory API needs to be in
+      sync before morning replenishment runs, or reorder quantities go out wrong.
+      This walkthrough shows the design, the safeguards, and the reasoning
+      behind each choice.
+    </p>
+    <p class="disclaimer">
+      vAI-RetailCo is a fictional company. The architecture reflects a common
+      enterprise integration pattern, not any single employer's system.
+    </p>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls fade-rise" role="region" aria-label="Pipeline controls">
+    <div class="eyebrow">Mode</div>
+    <div class="toggle" role="tablist">
+      <button id="mode-sample" class="active" role="tab" aria-selected="true">Sample data</button>
+      <button id="mode-upload" role="tab" aria-selected="false">Upload CSV</button>
+    </div>
+    <div class="grow"></div>
+    <button id="run-sample" class="btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <span>Run with sample data</span>
+    </button>
+    <button id="choose-file" class="btn hidden">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span>Choose CSV</span>
+    </button>
+    <input id="file-input" type="file" accept=".csv,text/csv" style="display:none" />
+    <button id="reset" class="btn btn-ghost hidden">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><polyline points="3 3 3 8 8 8"/></svg>
+      <span>Reset</span>
+    </button>
+  </div>
+
+  <div id="dropzone" class="dropzone hidden">
+    Drop a CSV here, or use Choose CSV above. Your file is parsed entirely in the
+    browser - nothing is uploaded anywhere.
+  </div>
+
+  <!-- Split view -->
+  <div class="split fade-rise">
+    <div>
+      <h2 class="section-title">Pipeline</h2>
+      <div class="panel" id="pipeline"></div>
+      <p class="panel-note">
+        Click any stage for a one-line rationale. Full rationale for every stage
+        is below.
+      </p>
+    </div>
+    <div>
+      <h2 class="section-title">Event log</h2>
+      <div class="log" id="log">
+        <div class="log-empty">Waiting for pipeline run...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSV preview -->
+  <div id="preview-section" class="section hidden">
+    <h2 class="section-title">Extracted records</h2>
+    <div class="table-wrap">
+      <div class="table-scroll"><table id="preview-table"></table></div>
+      <div id="preview-note" class="table-note hidden"></div>
+    </div>
+  </div>
+
+  <!-- Full rationale -->
+  <div class="section fade-rise">
+    <h2 class="section-title">Design rationale</h2>
+    <div class="rationale-wrap" id="rationale"></div>
+  </div>
+
+</div>
+
+<script>
+const STAGES = [
+  {
+    id: 'ingest',
+    label: 'CSV received',
+    sublabel: 'Ingestion',
+    icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>',
+    short: 'Standardized entry point for nightly SaaS exports.',
+    rationale: "Batch ingestion fits the shape of the source. The SaaS only exports at end-of-day, so real-time streaming would add cost without benefit. A predictable file contract at this boundary keeps the upstream SaaS interchangeable if the vendor is replaced.",
+    tradeoff: 'Batch vs. real-time: batch, because the source is scheduled.',
+  },
+  {
+    id: 'kafka',
+    label: 'Kafka topic',
+    sublabel: 'Event broker',
+    icon: '<circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/>',
+    short: 'Decouples the export from downstream processing.',
+    rationale: "Publishing the file event to Kafka lets each downstream consumer work at its own pace. If Bedrock or the target API is unavailable, events queue up rather than being lost. Any consumer can replay from an offset for backfills or debugging.",
+    tradeoff: 'Kafka vs. SQS: Kafka, for replay and multi-consumer support.',
+  },
+  {
+    id: 's3',
+    label: 'S3 archive',
+    sublabel: 'Cold storage',
+    icon: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/>',
+    short: 'Raw file preserved as source of truth.',
+    rationale: "The unmodified CSV is stored before any transformation. If a downstream stage corrupts data or the extraction logic changes, the original is always retrievable. Enables audit trails and full reprocessing without re-fetching from the SaaS.",
+    tradeoff: 'Standard vs. Glacier: Standard for 30 days, then Glacier.',
+  },
+  {
+    id: 'bedrock',
+    label: 'Bedrock extraction',
+    sublabel: 'LLM parsing',
+    icon: '<path d="M12 3l1.9 5.8L20 10l-4.7 3.4L17 20l-5-3.5L7 20l1.7-6.6L4 10l6.1-1.2z"/>',
+    short: 'Adapts to schema drift without code changes.',
+    rationale: "When the SaaS vendor renames a column or adds a field, an LLM-backed extractor adjusts to the shape of the file without a code deploy. Output is validated against a target schema before the next stage runs, so bad extractions fail loud rather than passing garbage forward.",
+    tradeoff: 'Bedrock vs. static parser: higher per-invocation cost, lower long-term maintenance.',
+  },
+  {
+    id: 'lambda',
+    label: 'API dispatch',
+    sublabel: 'Lambda',
+    icon: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+    short: 'Stateless writes to the target application.',
+    rationale: "Lambda scales to zero, is billed per invocation, and has built-in retries with a dead-letter queue for transient failures. Each record is dispatched independently, so a partial batch partially succeeds instead of failing whole.",
+    tradeoff: 'Lambda vs. ECS: Lambda, for burst load and zero idle cost.',
+  },
+  {
+    id: 'response',
+    label: 'Response logged',
+    sublabel: 'Observability',
+    icon: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+    short: 'Success and failure metrics feed Grafana.',
+    rationale: "Every dispatch outcome is logged with a correlation ID that traces back to the original file, the Kafka offset, and the extracted record. A Grafana dashboard surfaces sync health so operations sees the state of the nightly run without opening the AWS console.",
+    tradeoff: 'CloudWatch vs. Grafana: Grafana, for stakeholder-friendly views across accounts.',
+  },
+];
+
+const SAMPLE_CSV = `sku,adjustment,reason,location,timestamp
+SKU-4471,+12,receiving,STORE-042,2026-07-22T09:14:22
+SKU-1198,-3,damage,STORE-042,2026-07-22T09:15:01
+SKU-2205,+45,receiving,STORE-088,2026-07-22T09:15:47
+SKU-3312,-1,shrinkage,STORE-014,2026-07-22T09:16:12
+SKU-0087,+8,receiving,STORE-142,2026-07-22T09:16:55
+SKU-5540,-2,damage,STORE-042,2026-07-22T09:17:33`;
+
+let mode = 'sample';
+let csvData = null;
+let openStageId = null;
+let stageStates = {};
+let logs = [];
+let timeouts = [];
+
+function parseCsv(text) {
+  const lines = text.trim().split(/\r?\n/).filter(Boolean);
+  if (!lines.length) return { headers: [], rows: [] };
+  const headers = lines[0].split(',').map(h => h.trim());
+  const rows = lines.slice(1).map(line => {
+    const cells = line.split(',').map(c => c.trim());
+    const row = {};
+    headers.forEach((h, i) => row[h] = cells[i] ?? '');
+    return row;
+  });
+  return { headers, rows };
+}
+
+function formatTime(ms) {
+  const d = new Date(ms);
+  const pad = n => String(n).padStart(2, '0');
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${String(d.getMilliseconds()).padStart(3, '0')}`;
+}
+
+function el(tag, attrs = {}, children = []) {
+  const node = document.createElement(tag);
+  Object.entries(attrs).forEach(([k, v]) => {
+    if (k === 'class') node.className = v;
+    else if (k === 'html') node.innerHTML = v;
+    else if (k.startsWith('on')) node.addEventListener(k.slice(2), v);
+    else node.setAttribute(k, v);
+  });
+  (Array.isArray(children) ? children : [children]).forEach(c => {
+    if (c == null) return;
+    node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  });
+  return node;
+}
+
+function renderPipeline() {
+  const container = document.getElementById('pipeline');
+  container.innerHTML = '';
+  STAGES.forEach((stage, i) => {
+    const state = stageStates[stage.id];
+    const isLast = i === STAGES.length - 1;
+    const isOpen = openStageId === stage.id;
+
+    const wrap = el('div', {
+      class: `stage ${state === 'active' ? 'active' : ''} ${state === 'done' ? 'done' : ''}`,
+    });
+
+    const btn = el('button', {
+      class: 'stage-row',
+      'aria-expanded': String(isOpen),
+      onclick: () => {
+        openStageId = openStageId === stage.id ? null : stage.id;
+        renderPipeline();
+      },
+    });
+    const iconWrap = el('div', { class: 'stage-icon' });
+    iconWrap.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${stage.icon}</svg>`;
+    const middle = el('div', {}, [
+      el('div', { class: 'eyebrow', style: 'margin-bottom:2px' }, `${String(i + 1).padStart(2, '0')} / ${stage.sublabel}`),
+      el('div', { class: 'stage-label' }, stage.label),
+    ]);
+    const stateText = state === 'done' ? 'Done' : state === 'active' ? 'Running' : (isOpen ? 'Hide' : 'Why');
+    const stateNode = el('div', { class: 'stage-state' }, stateText);
+    btn.append(iconWrap, middle, stateNode);
+    wrap.append(btn);
+
+    if (isOpen) {
+      wrap.append(el('div', { class: 'stage-inline fade-rise' }, stage.short));
+    }
+
+    if (!isLast) {
+      wrap.append(el('div', { class: 'stage-connector' }));
+    }
+
+    container.append(wrap);
+  });
+}
+
+function renderLog() {
+  const container = document.getElementById('log');
+  container.innerHTML = '';
+  if (!logs.length) {
+    container.append(el('div', { class: 'log-empty' }, 'Waiting for pipeline run...'));
+    return;
+  }
+  logs.forEach(log => {
+    const line = el('div', { class: 'log-line fade-rise' }, [
+      el('span', { class: 'log-time' }, formatTime(log.ts)),
+      el('span', { class: 'log-stage' }, log.stage),
+      el('span', {}, log.message),
+    ]);
+    container.append(line);
+  });
+  container.scrollTop = container.scrollHeight;
+}
+
+function renderPreview() {
+  const section = document.getElementById('preview-section');
+  const table = document.getElementById('preview-table');
+  const note = document.getElementById('preview-note');
+  if (!csvData) { section.classList.add('hidden'); return; }
+  section.classList.remove('hidden');
+  table.innerHTML = '';
+
+  const thead = el('thead');
+  const trHead = el('tr');
+  csvData.headers.forEach(h => trHead.append(el('th', {}, h)));
+  thead.append(trHead);
+  table.append(thead);
+
+  const tbody = el('tbody');
+  csvData.rows.slice(0, 8).forEach(row => {
+    const tr = el('tr');
+    csvData.headers.forEach(h => tr.append(el('td', {}, row[h])));
+    tbody.append(tr);
+  });
+  table.append(tbody);
+
+  if (csvData.rows.length > 8) {
+    note.textContent = `Showing 8 of ${csvData.rows.length} rows`;
+    note.classList.remove('hidden');
+  } else {
+    note.classList.add('hidden');
+  }
+}
+
+function renderRationale() {
+  const container = document.getElementById('rationale');
+  container.innerHTML = '';
+  STAGES.forEach((stage, i) => {
+    const row = el('div', { class: 'rationale-row' }, [
+      el('div', {}, [
+        el('div', { class: 'eyebrow', style: 'margin-bottom:6px' }, `${String(i + 1).padStart(2, '0')} / ${stage.sublabel}`),
+        el('div', { class: 'rationale-label' }, stage.label),
+      ]),
+      el('div', {}, [
+        el('p', { class: 'rationale-body' }, stage.rationale),
+        el('p', { class: 'rationale-tradeoff' }, `Trade-off: ${stage.tradeoff}`),
+      ]),
+    ]);
+    container.append(row);
+  });
+}
+
+function reset() {
+  timeouts.forEach(clearTimeout);
+  timeouts = [];
+  stageStates = {};
+  logs = [];
+  openStageId = null;
+  csvData = null;
+  document.getElementById('reset').classList.add('hidden');
+  renderPipeline();
+  renderLog();
+  renderPreview();
+}
+
+function pushLog(entry) {
+  logs.push({ ...entry, ts: Date.now() });
+  renderLog();
+}
+
+function runPipeline(data) {
+  timeouts.forEach(clearTimeout);
+  timeouts = [];
+  stageStates = {};
+  logs = [];
+  openStageId = null;
+  renderPipeline();
+  renderLog();
+
+  const rowCount = data?.rows?.length ?? 6;
+  const colCount = data?.headers?.length ?? 5;
+  const messages = {
+    ingest: `CSV received - ${rowCount} rows, ${colCount} columns`,
+    kafka: 'Event published to inventory.adjustments topic (offset 4821)',
+    s3: 's3://vairetailco-audit/inv/2026-07-22/adjustments.csv archived',
+    bedrock: `Extracted ${rowCount} structured records, schema check passed`,
+    lambda: `Dispatched ${rowCount} PUT /inventory/adjustments - ${Math.max(rowCount - 1, 0)} success, 1 retry`,
+    response: `Sync complete - success rate ${rowCount ? Math.round(((rowCount - 1) / rowCount) * 100) : 100}%, latency 4.1s`,
+  };
+
+  const step = 850;
+  STAGES.forEach((stage, i) => {
+    timeouts.push(setTimeout(() => {
+      stageStates[stage.id] = 'active';
+      renderPipeline();
+      pushLog({ stage: stage.id, message: messages[stage.id] });
+    }, i * step));
+    timeouts.push(setTimeout(() => {
+      stageStates[stage.id] = 'done';
+      renderPipeline();
+    }, i * step + step - 100));
+  });
+
+  timeouts.push(setTimeout(() => {
+    document.getElementById('reset').classList.remove('hidden');
+  }, STAGES.length * step));
+}
+
+function handleFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    csvData = parseCsv(String(e.target.result || ''));
+    renderPreview();
+    runPipeline(csvData);
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('mode-sample').addEventListener('click', () => setMode('sample'));
+document.getElementById('mode-upload').addEventListener('click', () => setMode('upload'));
+
+function setMode(m) {
+  if (mode === m) return;
+  mode = m;
+  reset();
+  document.getElementById('mode-sample').classList.toggle('active', m === 'sample');
+  document.getElementById('mode-sample').setAttribute('aria-selected', m === 'sample');
+  document.getElementById('mode-upload').classList.toggle('active', m === 'upload');
+  document.getElementById('mode-upload').setAttribute('aria-selected', m === 'upload');
+  document.getElementById('run-sample').classList.toggle('hidden', m !== 'sample');
+  document.getElementById('choose-file').classList.toggle('hidden', m !== 'upload');
+  document.getElementById('dropzone').classList.toggle('hidden', m !== 'upload');
+}
+
+document.getElementById('run-sample').addEventListener('click', () => {
+  csvData = parseCsv(SAMPLE_CSV);
+  renderPreview();
+  runPipeline(csvData);
+});
+document.getElementById('choose-file').addEventListener('click', () => {
+  document.getElementById('file-input').click();
+});
+document.getElementById('file-input').addEventListener('change', e => {
+  handleFile(e.target.files?.[0]);
+});
+document.getElementById('reset').addEventListener('click', reset);
+
+const dropzone = document.getElementById('dropzone');
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files?.[0]);
+});
+
+renderPipeline();
+renderRationale();
+</script>
+
+</body>
+</html>
