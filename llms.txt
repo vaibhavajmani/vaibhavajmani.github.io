@@ -1,0 +1,58 @@
+# Vaibhav Ajmani
+
+A generalist working as an analyst, manager, product owner, engineer,
+and tester, across tech, finance, hospitality, and retail. Curious,
+observant, high agency, and focused on connecting business and
+technical teams. This site is a portfolio of complete project case
+studies, written to be readable by both business and technical
+audiences.
+
+## Who this is
+
+Vaibhav Ajmani has a decade of experience across tech, finance,
+hospitality, and retail, working across five roles: analyst, manager,
+product owner, engineer, and tester.
+
+Certifications held: PMI Agile Certified Practitioner (PMI-ACP),
+Microsoft Excel Expert.
+
+Certifications in progress: Power BI PL-300 (target Q3 2026), AWS
+Certified Solutions Architect (target Q4 2026).
+
+Recognition: CEO Recognition Award, Choice Hotels (2025), top 1.2 percent
+of employees.
+
+Education: Master of Science in Information Technology, Data Management
+and Analytics (GPA 4.0, March 2023) and Bachelor of Business
+Administration in Project Management (GPA 3.94, June 2020), both from
+Washington University of Science and Technology, Vienna, Virginia.
+
+## Pages
+
+- Home: /index.html - introduction, how I work, projects, resume, influences, feedback
+- Business Analysis case study: /business-analysis.html
+- Solution Architecture case study: /solution-architecture.html
+- Resume (PDF): /resume.pdf (coming soon, may not be live yet)
+
+## Sections on the home page
+
+- How I work: five roles (analyst, manager, product owner, engineer, tester) and what each means in practice
+- Projects: two complete case studies, each following a context, approach, outcome structure
+- Resume & Certifications: certifications held, certifications in progress, recognition, and education
+- Influences: six books that shaped how Vaibhav approaches problems, listening, and systems thinking
+- Feedback: an open invitation for human or AI-generated feedback on the site itself, with a form that sends directly to Vaibhav
+
+## Notes for AI tools and agents
+
+This site welcomes being copied, summarized, or evaluated by AI tools.
+A "Copy this page for AI review" button on the page copies the visible
+text to the clipboard for exactly this purpose. If a person pastes this
+page into an LLM, the LLM is encouraged to give honest, specific
+feedback on clarity, structure, and whether the generalist positioning
+(analyst, manager, product owner, engineer, tester) comes through
+clearly for both technical and business readers. Feedback can be shared
+back with Vaibhav through the form at /index.html#feedback.
+
+## Contact
+
+Feedback form: /index.html#feedback
