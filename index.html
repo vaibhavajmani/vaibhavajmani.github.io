@@ -54,6 +54,7 @@
     --accent-soft: #eaf2f6;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { overflow-x: hidden; width: 100%; }
   html { scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -704,12 +705,12 @@
     if (!videoA || !videoB) return;
     const FADE = 2.5;
     let ready = false;
-    videoA.playbackRate = 0.75;
-    videoB.playbackRate = 0.75;
+    videoA.playbackRate = 0.5;
+    videoB.playbackRate = 0.5;
     videoA.addEventListener('loadedmetadata', () => {
-      videoA.playbackRate = 0.75;
+      videoA.playbackRate = 0.5;
       videoB.currentTime = videoA.duration / 2;
-      videoB.playbackRate = 0.75;
+      videoB.playbackRate = 0.5;
       ready = true;
     });
     function watch(active, other, activeIsA) {
