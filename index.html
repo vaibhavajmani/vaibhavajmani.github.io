@@ -416,6 +416,127 @@
   footer p { text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); }
   footer p { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
   footer p:last-child { margin-bottom: 0; }
+
+  .resume-cta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+ 
+  .resume-alt {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    opacity: 0.68;
+    font: inherit;
+    font-size: 0.86rem;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    cursor: pointer;
+  }
+ 
+  .resume-alt:hover { opacity: 1; }
+ 
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 1px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 0 0 56px;
+  }
+ 
+  .metric {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 22px 20px;
+  }
+ 
+  .metric-val {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 6px;
+    font-variant-numeric: tabular-nums;
+  }
+ 
+  .metric-cap {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    opacity: 0.68;
+    margin: 0;
+  }
+ 
+  .rmodal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(6, 12, 20, 0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 999;
+  }
+ 
+  .rmodal[data-open="true"] { display: flex; }
+ 
+  .rmodal-card {
+    width: 100%;
+    max-width: 25rem;
+    background: rgba(18, 26, 38, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    padding: 28px;
+  }
+ 
+  .rmodal-card h3 { font-size: 1.05rem; margin: 0 0 6px; }
+ 
+  .rmodal-note {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    opacity: 0.68;
+    margin: 0 0 22px;
+  }
+ 
+  .rmodal-card label {
+    display: block;
+    font-size: 0.78rem;
+    opacity: 0.68;
+    margin-bottom: 6px;
+  }
+ 
+  .rmodal-card input[type="text"],
+  .rmodal-card input[type="email"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 4px;
+    color: inherit;
+    font: inherit;
+    font-size: 0.9rem;
+  }
+ 
+  .rmodal-actions { display: flex; gap: 10px; }
+ 
+  .rmodal-status { font-size: 0.85rem; margin: 14px 0 0; min-height: 1.2rem; }
+ 
+  .rmodal-hp { position: absolute; left: -9999px; }
+ 
+  @media (max-width: 600px) {
+    .metric-val { font-size: 1.5rem; }
+  }
 </style>
 </head>
 <body>
@@ -531,71 +652,236 @@
     </div>
   </section>
 
-  <section id="resume">
-    <div class="wrap">
-      <p class="section-label">Resume &amp; Certifications</p>
-      <h2>Credentials at a glance</h2>
-      <p style="margin-bottom: 32px; max-width: 60ch;">A full resume is available as a PDF.</p>
-
-      <div class="resume-group">
-        <p class="resume-group-label">Certifications</p>
-        <ul class="resume-list">
-          <li>
-            <div>
-              <span class="cert-name">PMI Agile Certified Practitioner (PMI-ACP)&reg;</span>
-              <span class="cert-id">3421219</span>
-            </div>
-          </li>
-          <li>
-            <div>
-              <span class="cert-name">Microsoft Excel Expert</span>
-              <span class="cert-id">I246-6309</span>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div class="resume-group">
-        <p class="resume-group-label">In Progress</p>
-        <ul class="resume-list">
-          <li>
-            <span class="cert-name">Power BI PL-300</span>
-            <span class="cert-meta">Target: Q3 2026</span>
-          </li>
-          <li>
-            <span class="cert-name">AWS Certified Solutions Architect</span>
-            <span class="cert-meta">Target: Q4 2026</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="resume-group">
-        <p class="resume-group-label">Recognition</p>
-        <ul class="resume-list">
-          <li>
-            <span class="cert-name">CEO Recognition Award, Choice Hotels (2025)</span>
-            <span class="cert-meta">Top 1.2% of employees</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="resume-group">
-        <p class="resume-group-label">Education</p>
-        <div class="edu-entry">
-          <div class="edu-degree">Master of Science, Information Technology, Data Management &amp; Analytics</div>
-          <div class="edu-school">Washington University of Science and Technology, Vienna, Virginia, United States of America</div>
-          <div class="edu-meta">GPA 4.0 · March 2023</div>
-        </div>
-        <div class="edu-entry">
-          <div class="edu-degree">Bachelor of Business Administration, Project Management</div>
-          <div class="edu-school">Washington University of Science and Technology, Vienna, Virginia, United States of America</div>
-          <div class="edu-meta">GPA 3.94 · June 2020</div>
-        </div>
-      </div>
-
-      <a class="resume-download" href="resume.pdf">Download resume (PDF)</a>
+<section id="resume">
+  <div class="wrap">
+    <p class="section-label">Resume &amp; Certifications</p>
+    <h2>Credentials at a glance</h2>
+ 
+    <div class="resume-cta">
+      <a class="resume-download" href="resume.pdf" download>Download resume (PDF)</a>
+      <button class="resume-alt" type="button" id="rOpen">Or have it sent to your inbox</button>
     </div>
-  </section>
+ 
+    <p class="resume-group-label">Impact at a glance</p>
+    <p style="margin-bottom: 24px; max-width: 60ch; opacity: 0.68;">Enterprise hospitality billing platform, 2023 to present.</p>
+ 
+    <div class="metrics">
+      <div class="metric">
+        <p class="metric-val" data-to="700" data-pre="$" data-post="M">$700M</p>
+        <p class="metric-cap">Annual billing revenue supported</p>
+      </div>
+      <div class="metric">
+        <p class="metric-val" data-to="8" data-post="M+">8M+</p>
+        <p class="metric-cap">Transactions processed monthly</p>
+      </div>
+      <div class="metric">
+        <p class="metric-val" data-to="7000" data-post="+" data-comma="1">7,000+</p>
+        <p class="metric-cap">Properties served</p>
+      </div>
+      <div class="metric">
+        <p class="metric-val" data-to="1.5" data-pre="$" data-post="M+" data-dec="1">$1.5M+</p>
+        <p class="metric-cap">Revenue protected through controls</p>
+      </div>
+      <div class="metric">
+        <p class="metric-val">24h to 30m</p>
+        <p class="metric-cap">Data latency after re-architecture</p>
+      </div>
+      <div class="metric">
+        <p class="metric-val" data-to="5" data-post=" quarters">5 quarters</p>
+        <p class="metric-cap">Consecutive clean audit results</p>
+      </div>
+    </div>
+ 
+    <div class="resume-group">
+      <p class="resume-group-label">Certifications</p>
+      <ul class="resume-list">
+        <li>
+          <div>
+            <span class="cert-name">PMI Agile Certified Practitioner (PMI-ACP)&reg;</span>
+            <span class="cert-id">3421219</span>
+          </div>
+        </li>
+        <li>
+          <div>
+            <span class="cert-name">Microsoft Excel Expert</span>
+            <span class="cert-id">I246-6309</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="resume-group">
+      <p class="resume-group-label">In Progress</p>
+      <ul class="resume-list">
+        <li>
+          <span class="cert-name">Power BI PL-300</span>
+          <span class="cert-meta">Target: Q3 2026</span>
+        </li>
+        <li>
+          <span class="cert-name">AWS Certified Solutions Architect</span>
+          <span class="cert-meta">Target: Q4 2026</span>
+        </li>
+      </ul>
+    </div>
+    <div class="resume-group">
+      <p class="resume-group-label">Recognition</p>
+      <ul class="resume-list">
+        <li>
+          <span class="cert-name">CEO Recognition Award, Choice Hotels (2025)</span>
+          <span class="cert-meta">Top 1.2% of employees</span>
+        </li>
+      </ul>
+    </div>
+    <div class="resume-group">
+      <p class="resume-group-label">Education</p>
+      <div class="edu-entry">
+        <div class="edu-degree">Master of Science, Information Technology, Data Management &amp; Analytics</div>
+        <div class="edu-school">Washington University of Science and Technology, Vienna, Virginia, United States of America</div>
+        <div class="edu-meta">GPA 4.0 &middot; March 2023</div>
+      </div>
+      <div class="edu-entry">
+        <div class="edu-degree">Bachelor of Business Administration, Project Management</div>
+        <div class="edu-school">Washington University of Science and Technology, Vienna, Virginia, United States of America</div>
+        <div class="edu-meta">GPA 3.94 &middot; June 2020</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div class="rmodal" id="rModal" role="dialog" aria-modal="true" aria-labelledby="rTitle">
+  <div class="rmodal-card">
+    <h3 id="rTitle">Send the resume to your inbox</h3>
+    <p class="rmodal-note">The download starts right away either way. Your details just let me follow up.</p>
+    <form id="rForm" novalidate>
+      <label for="rName">Name</label>
+      <input type="text" id="rName" name="name" autocomplete="name" required />
+      <label for="rEmail">Email</label>
+      <input type="email" id="rEmail" name="email" autocomplete="email" required />
+      <input type="hidden" name="_subject" value="Resume request from portfolio" />
+      <input type="hidden" name="source" value="resume-download" />
+      <input type="text" name="_gotcha" class="rmodal-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <div class="rmodal-actions">
+        <button type="submit" class="resume-download" id="rSend">Send</button>
+        <button type="button" class="resume-alt" id="rCancel">Cancel</button>
+      </div>
+      <p class="rmodal-status" id="rStatus" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+ 
+<script>
+(function () {
+  var ENDPOINT = "https://formspree.io/f/mkodzyka";
+  var FILE = "resume.pdf";
+ 
+  var modal = document.getElementById("rModal");
+  var form = document.getElementById("rForm");
+  var status = document.getElementById("rStatus");
+  var sendBtn = document.getElementById("rSend");
+  var lastFocus = null;
+ 
+  function open() {
+    lastFocus = document.activeElement;
+    modal.setAttribute("data-open", "true");
+    document.getElementById("rName").focus();
+  }
+ 
+  function close() {
+    modal.removeAttribute("data-open");
+    status.textContent = "";
+    form.reset();
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Send";
+    if (lastFocus) lastFocus.focus();
+  }
+ 
+  function download() {
+    var a = document.createElement("a");
+    a.href = FILE;
+    a.download = "";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+ 
+  document.getElementById("rOpen").addEventListener("click", open);
+  document.getElementById("rCancel").addEventListener("click", close);
+ 
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) close();
+  });
+ 
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && modal.hasAttribute("data-open")) close();
+  });
+ 
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var nameVal = form.name.value.trim();
+    var emailVal = form.email.value.trim();
+ 
+    if (!nameVal || !emailVal || emailVal.indexOf("@") < 1) {
+      status.textContent = "Add your name and a valid email.";
+      return;
+    }
+ 
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending";
+    status.textContent = "";
+ 
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      body: new FormData(form)
+    })
+      .then(finish)
+      .catch(finish);
+ 
+    function finish() {
+      download();
+      status.textContent = "Thanks. Your download has started.";
+      setTimeout(close, 2200);
+    }
+  });
+ 
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ 
+  function countUp(el) {
+    var target = parseFloat(el.getAttribute("data-to"));
+    var pre = el.getAttribute("data-pre") || "";
+    var post = el.getAttribute("data-post") || "";
+    var dec = parseInt(el.getAttribute("data-dec") || "0", 10);
+    var comma = el.getAttribute("data-comma") === "1";
+    var t0 = null;
+ 
+    function fmt(n) {
+      var v = dec ? n.toFixed(dec) : String(Math.round(n));
+      if (comma) v = Number(v).toLocaleString("en-US");
+      return pre + v + post;
+    }
+ 
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / 900, 1);
+      el.textContent = fmt(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = fmt(target);
+    }
+    requestAnimationFrame(step);
+  }
+ 
+  var grid = document.querySelector(".metrics");
+  if (grid && !reduced && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.querySelectorAll(".metric-val[data-to]").forEach(countUp);
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.25 });
+    io.observe(grid);
+  }
+})();
+</script>
 
   <section id="influences">
     <div class="wrap">
