@@ -489,6 +489,22 @@
   .book p { font-size: 14.5px; line-height: 1.55; max-width: 62ch; }
 
   .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 8px; }
+  .contact-email {
+    font-size: 14px; color: var(--ink); margin-top: 14px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  }
+  .email-copy {
+    background: none; border: none; padding: 0; margin: 0;
+    font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+    color: var(--ink); cursor: pointer;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+  .email-copy:hover { opacity: 0.72; }
+  .email-copy:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  #emailCopied {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12.5px;
+    color: var(--muted);
+  }
   .feedback-block { margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--line); }
   .ai-inline-link {
     background: none; border: none; padding: 0; margin: 0;
@@ -938,6 +954,11 @@
         <a class="resume-download" href="https://linkedin.com/in/vaibhav-ajmani" target="_blank" rel="noopener noreferrer">View LinkedIn</a>
         <a class="resume-download" href="resume.pdf" download="Senior Analyst - Vaibhav Ajmani - Resume.pdf">Download resume</a>
       </div>
+      <p class="contact-email">
+        Or copy it:
+        <button type="button" id="copyEmail" class="email-copy">vaiajm2793@gmail.com</button>
+        <span id="emailCopied" role="status" aria-live="polite"></span>
+      </p>
 
       <div class="feedback-block">
         <p class="section-label" style="margin-top:8px;">Share portfolio feedback</p>
@@ -1063,6 +1084,46 @@
     setTimeout(function() {
       els.forEach(run);
     }, 450);
+  })();
+</script>
+
+<script>
+  (function() {
+    var btn = document.getElementById("copyEmail");
+    var out = document.getElementById("emailCopied");
+    if (!btn || !out) return;
+    var addr = btn.textContent.trim();
+
+    function done(msg) {
+      out.textContent = msg;
+      setTimeout(function() { out.textContent = ""; }, 2600);
+    }
+
+    btn.addEventListener("click", function() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(addr).then(function() {
+          done("Copied");
+        }).catch(function() {
+          done("Press Ctrl+C to copy");
+          selectText(btn);
+        });
+        return;
+      }
+      selectText(btn);
+      try {
+        done(document.execCommand("copy") ? "Copied" : "Press Ctrl+C to copy");
+      } catch (e) {
+        done("Press Ctrl+C to copy");
+      }
+    });
+
+    function selectText(el) {
+      var r = document.createRange();
+      r.selectNodeContents(el);
+      var s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+    }
   })();
 </script>
 
