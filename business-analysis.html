@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>FlowBridge- closing the gap between sales and support - Vaibhav Ajmani</title>
+<title>FlowBridge - closing the gap between sales and support - Vaibhav Ajmani</title>
 <meta name="description" content="Business analysis case study: a SaaS company losing customers because sales and support worked from different systems. The problem, the options considered, and a phased plan to fix it." />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -15,18 +15,18 @@
   --text: #ffffff;
   --text-soft: rgba(255, 255, 255, 0.80);
   --muted: rgba(255, 255, 255, 0.58);
-  --line: rgba(255, 255, 255, 0.18);
+  --line: rgba(255, 255, 255, 0.22);
   --line-soft: rgba(255, 255, 255, 0.10);
-  --panel: rgba(18, 22, 30, 0.42);
+  --panel: rgba(255, 255, 255, 0.10);
   --panel-log: rgba(10, 12, 18, 0.55);
-  --accent: #9cc7e0;
+  --accent: #ffffff;
   --success: #a8dfc8;
 }
 
 * { box-sizing: border-box; }
 
 html {
-  background: #0d1420;
+  background: linear-gradient(to bottom, #4a7ba8 0%, #7fa8c9 50%, #b8d0e2 100%) fixed;
 }
 
 body { background: transparent; }
@@ -47,6 +47,11 @@ html, body {
 
 html { scroll-behavior: smooth; scroll-padding-top: 32px; }
 
+h1, h2, h3, h4, h5, p, li, span, a, label, figcaption, td, th, div.eyebrow, .hero-eyebrow {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
+}
+
+
 /* Sky video background - same pattern as main index */
 .sky-video {
   position: fixed;
@@ -57,20 +62,20 @@ html { scroll-behavior: smooth; scroll-padding-top: 32px; }
   height: 100dvh;
   object-fit: cover;
   z-index: -2;
-  filter: brightness(0.62);
+  filter: brightness(0.7);
 }
 
 .sky-overlay {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(6,10,18,0.30) 0%, rgba(6,10,18,0.55) 100%);
+  background: rgba(0, 0, 0, 0.06);
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .sky-video { display: none; }
-  html { background: #1a2432; }
+  html { background: linear-gradient(to bottom, #4a7ba8 0%, #7fa8c9 50%, #b8d0e2 100%) fixed; }
 }
 
 .mono { font-family: 'IBM Plex Mono', 'SF Mono', Menlo, monospace; }
