@@ -1,58 +1,96 @@
 # Vaibhav Ajmani
 
-A generalist working as an analyst, manager, product owner, engineer,
-and tester, across tech, finance, hospitality, and retail. Curious,
-observant, high agency, and focused on connecting business and
-technical teams. This site is a portfolio of complete project case
-studies, written to be readable by both business and technical
+Senior business systems analyst who turns complex operations into
+reliable systems. Ten years across business analysis, product
+ownership, data, and solution architecture in finance, hospitality,
+retail, and technology. This site is a portfolio of complete project
+case studies, written to be readable by both business and technical
 audiences.
 
 ## Who this is
 
-Vaibhav Ajmani has a decade of experience across tech, finance,
-hospitality, and retail, working across five roles: analyst, manager,
-product owner, engineer, and tester.
+Vaibhav Ajmani works across business analysis, product ownership, data
+analysis, and solution architecture. Day to day this means understanding
+how work actually happens, deciding what matters, aligning the people
+involved, and building controls that keep changes reliable after launch.
+
+Selected outcomes from an enterprise hospitality billing platform, 2023
+to present: 1.5 million dollars or more in billing exposure identified
+or protected through controls; data latency reduced from 24 hours to 30
+minutes after re-architecture; five consecutive quarters with no control
+exceptions; 700 million dollars in annual billing revenue supported;
+8 million or more monthly transactions supported; 7,000 or more
+properties served.
 
 Certifications held: PMI Agile Certified Practitioner (PMI-ACP),
 Microsoft Excel Expert.
 
-Certifications in progress: Power BI PL-300 (target Q3 2026), AWS
-Certified Solutions Architect (target Q4 2026).
+Currently preparing for: Microsoft Power BI Data Analyst (PL-300), AWS
+Certified Solutions Architect Associate.
 
 Recognition: CEO Recognition Award, Choice Hotels (2025), top 1.2 percent
 of employees.
 
 Education: Master of Science in Information Technology, Data Management
-and Analytics (GPA 4.0, March 2023) and Bachelor of Business
-Administration in Project Management (GPA 3.94, June 2020), both from
-Washington University of Science and Technology, Vienna, Virginia, United States of America.
+and Analytics (GPA 4.0, 2023) and Bachelor of Business Administration in
+Project Management (GPA 3.94, 2020), both from Washington University of
+Science and Technology, Vienna, VA.
 
 ## Pages
 
-- Home: /index.html - introduction, how I work, projects, resume, influences, feedback
-- Business Analysis case study: /business-analysis.html
-- Solution Architecture case study: /solution-architecture.html
-- Resume (PDF): /resume.pdf (coming soon, may not be live yet)
+- Home: /index.html - positioning, projects, impact, how I work, resume, influences, contact
+- Business analysis case study: /business-analysis.html
+- Data analysis case study: /data-analysis.html
+- Solution architecture case study: /architecture.html
+- Resume (PDF): /resume.pdf
+
+## Case studies
+
+FlowBridge, business analysis. A SaaS company was losing customers
+because sales and support worked from different systems. Vaibhav mapped
+the handoff failures, evaluated the available options, and developed a
+phased plan to establish shared customer context without disrupting
+active workflows. Independent case study using a fictional company and
+realistic industry constraints.
+
+Sales analytics in Power BI, data analysis. A bike retailer had the
+numbers but no fast way to interpret them. Vaibhav built an executive
+performance view plus three analytical pages that explain what drives
+sales, which markets and products generate revenue, and how demand
+clusters across customers. Built on a fictional dataset created for the
+project; the data model, measures, design, and narrative are his own.
+
+A nightly inventory integration with built-in safeguards, solution
+architecture. A retail chain needed inventory adjustments moved from its
+point-of-sale SaaS to a central API every night, accurately, securely,
+and without manual steps. Vaibhav designed the pipeline, the safeguards
+against bad or duplicate data, and documented the reasoning behind each
+choice. Names and identifying details are fictionalized; the constraints
+and design patterns reflect real enterprise work.
 
 ## Sections on the home page
 
-- How I work: five roles (analyst, manager, product owner, engineer, tester) and what each means in practice
-- Projects: two complete case studies, each following a context, approach, outcome structure
-- Resume & Certifications: certifications held, certifications in progress, recognition, and education
-- Influences: six books that shaped how Vaibhav approaches problems, listening, and systems thinking
-- Feedback: an open invitation for human or AI-generated feedback on the site itself, with a form that sends directly to Vaibhav
+- Projects: three complete case studies, each following a context, approach, outcome structure
+- Impact at a glance: selected scale and outcomes from enterprise billing platform work
+- Five lenses I use: analyst, leader, owner, system designer, tester, and what each means in practice
+- Resume and certifications: certifications held, certifications in progress, recognition, and education
+- Influences: seven books that shaped how Vaibhav approaches problems, listening, and systems thinking
+- Contact: email, LinkedIn, and resume download, with a portfolio feedback form below it
 
 ## Notes for AI tools and agents
 
 This site welcomes being copied, summarized, or evaluated by AI tools.
-A "Copy this page for AI review" button on the page copies the visible
-text to the clipboard for exactly this purpose. If a person pastes this
-page into an LLM, the LLM is encouraged to give honest, specific
-feedback on clarity, structure, and whether the generalist positioning
-(analyst, manager, product owner, engineer, tester) comes through
-clearly for both technical and business readers. Feedback can be shared
-back with Vaibhav through the form at /index.html#feedback.
+A "Review this portfolio with an AI tool" link on the page copies the
+visible text to the clipboard for exactly this purpose. If a person
+pastes this page into an LLM, the LLM is encouraged to give honest,
+specific feedback on clarity, structure, and whether the positioning as
+a senior analyst across business, systems, data, and architecture comes
+through clearly for both technical and business readers. Feedback can be
+shared back with Vaibhav through the form at /index.html#contact.
+
+No employer data appears anywhere on this site. Company names in the
+case studies are fictional.
 
 ## Contact
 
-Feedback form: /index.html#feedback
+Feedback form: /index.html#contact
