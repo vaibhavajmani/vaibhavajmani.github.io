@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vaibhav Ajmani - Portfolio</title>
-<meta name="description" content="Vaibhav Ajmani is a generalist working across business analysis, product ownership, solution architecture, and data. Portfolio of complete project case studies written for business and technical readers.">
+<meta name="description" content="Vaibhav Ajmani is a senior business systems analyst who turns complex operations into reliable systems. Case studies in business analysis, data, and solution architecture, written for business and technical readers.">
 <meta name="author" content="Vaibhav Ajmani">
 
 <meta property="og:type" content="website">
@@ -610,65 +610,6 @@
     margin: 0;
   }
  
-  .rmodal {
-    position: fixed;
-    inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: rgba(6, 12, 20, 0.72);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    z-index: 999;
-  }
- 
-  .rmodal[data-open="true"] { display: flex; }
- 
-  .rmodal-card {
-    width: 100%;
-    max-width: 25rem;
-    background: rgba(18, 26, 38, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 8px;
-    padding: 28px;
-  }
- 
-  .rmodal-card h3 { font-size: 1.05rem; margin: 0 0 6px; }
- 
-  .rmodal-note {
-    font-size: 0.85rem;
-    line-height: 1.5;
-    opacity: 0.68;
-    margin: 0 0 22px;
-  }
- 
-  .rmodal-card label {
-    display: block;
-    font-size: 0.78rem;
-    opacity: 0.68;
-    margin-bottom: 6px;
-  }
- 
-  .rmodal-card input[type="text"],
-  .rmodal-card input[type="email"] {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px 12px;
-    margin-bottom: 16px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 4px;
-    color: inherit;
-    font: inherit;
-    font-size: 0.9rem;
-  }
- 
-  .rmodal-actions { display: flex; gap: 10px; }
- 
-  .rmodal-status { font-size: 0.85rem; margin: 14px 0 0; min-height: 1.2rem; }
- 
-  .rmodal-hp { position: absolute; left: -9999px; }
  
   @media (max-width: 600px) {
     .metric-val { font-size: 1.5rem; }
@@ -921,143 +862,6 @@
   </div>
 </section>
 
-  <div class="rmodal" id="rModal" role="dialog" aria-modal="true" aria-labelledby="rTitle">
-  <div class="rmodal-card">
-    <h3 id="rTitle">Send the resume to your inbox</h3>
-    <p class="rmodal-note">The download starts right away either way. Your details just let me follow up.</p>
-    <form id="rForm" novalidate>
-      <label for="rName">Name</label>
-      <input type="text" id="rName" name="name" autocomplete="name" required />
-      <label for="rEmail">Email</label>
-      <input type="email" id="rEmail" name="email" autocomplete="email" required />
-      <input type="hidden" name="_subject" value="Resume request from portfolio" />
-      <input type="hidden" name="source" value="resume-download" />
-      <input type="text" name="_gotcha" class="rmodal-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
-      <div class="rmodal-actions">
-        <button type="submit" class="resume-download" id="rSend">Send</button>
-        <button type="button" class="resume-alt" id="rCancel">Cancel</button>
-      </div>
-      <p class="rmodal-status" id="rStatus" role="status" aria-live="polite"></p>
-    </form>
-  </div>
-</div>
- 
-<script>
-(function () {
-  var ENDPOINT = "https://formspree.io/f/mkodzyka";
-  var FILE = "resume.pdf";
-  var DOWNLOAD_NAME = "Senior Analyst - Vaibhav Ajmani - Resume.pdf";
- 
-  var modal = document.getElementById("rModal");
-  var form = document.getElementById("rForm");
-  var status = document.getElementById("rStatus");
-  var sendBtn = document.getElementById("rSend");
-  var lastFocus = null;
- 
-  function open() {
-    lastFocus = document.activeElement;
-    modal.setAttribute("data-open", "true");
-    document.getElementById("rName").focus();
-  }
- 
-  function close() {
-    modal.removeAttribute("data-open");
-    status.textContent = "";
-    form.reset();
-    sendBtn.disabled = false;
-    sendBtn.textContent = "Send";
-    if (lastFocus) lastFocus.focus();
-  }
- 
-  function download() {
-    var a = document.createElement("a");
-    a.href = FILE;
-    a.download = DOWNLOAD_NAME;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
- 
-  var rOpenBtn = document.getElementById("rOpen");
-  if (rOpenBtn) rOpenBtn.addEventListener("click", open);
-  document.getElementById("rCancel").addEventListener("click", close);
- 
-  modal.addEventListener("click", function (e) {
-    if (e.target === modal) close();
-  });
- 
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && modal.hasAttribute("data-open")) close();
-  });
- 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var nameVal = form.name.value.trim();
-    var emailVal = form.email.value.trim();
- 
-    if (!nameVal || !emailVal || emailVal.indexOf("@") < 1) {
-      status.textContent = "Add your name and a valid email.";
-      return;
-    }
- 
-    sendBtn.disabled = true;
-    sendBtn.textContent = "Sending";
-    status.textContent = "";
- 
-    fetch(ENDPOINT, {
-      method: "POST",
-      headers: { Accept: "application/json" },
-      body: new FormData(form)
-    })
-      .then(finish)
-      .catch(finish);
- 
-    function finish() {
-      download();
-      status.textContent = "Thanks. Your download has started.";
-      setTimeout(close, 2200);
-    }
-  });
- 
-  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
- 
-  function countUp(el) {
-    var target = parseFloat(el.getAttribute("data-to"));
-    var pre = el.getAttribute("data-pre") || "";
-    var post = el.getAttribute("data-post") || "";
-    var dec = parseInt(el.getAttribute("data-dec") || "0", 10);
-    var comma = el.getAttribute("data-comma") === "1";
-    var t0 = null;
- 
-    function fmt(n) {
-      var v = dec ? n.toFixed(dec) : String(Math.round(n));
-      if (comma) v = Number(v).toLocaleString("en-US");
-      return pre + v + post;
-    }
- 
-    function step(ts) {
-      if (!t0) t0 = ts;
-      var p = Math.min((ts - t0) / 900, 1);
-      el.textContent = fmt(target * (1 - Math.pow(1 - p, 3)));
-      if (p < 1) requestAnimationFrame(step);
-      else el.textContent = fmt(target);
-    }
-    requestAnimationFrame(step);
-  }
- 
-  var grid = document.querySelector(".metrics");
-  if (grid && !reduced && "IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.querySelectorAll(".metric-val[data-to]").forEach(countUp);
-        io.unobserve(entry.target);
-      });
-    }, { threshold: 0.25 });
-    io.observe(grid);
-  }
-})();
-</script>
 
   <section id="influences">
     <div class="wrap">
