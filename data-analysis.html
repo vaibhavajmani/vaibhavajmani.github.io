@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales analytics in Power BI - Vaibhav Ajmani</title>
+<meta name="description" content="A Power BI sales report for a fictional bike retailer: an executive dashboard plus diagnostic views that explain what drives sales, where revenue comes from, and how demand clusters.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#ffffff;
+    --muted:rgba(255,255,255,0.72);
+    --faint:rgba(255,255,255,0.55);
+    --accent:#5cb0d4;
+    --accent-deep:#1f6f93;
+    --glass:rgba(255,255,255,0.08);
+    --glass-brd:rgba(255,255,255,0.14);
+    --hair:rgba(255,255,255,0.12);
+    --radius:14px;
+    --maxw:860px;
+    --font:'Inter',system-ui,-apple-system,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html{
+    -webkit-text-size-adjust:100%;
+    scroll-behavior:smooth;
+    background:#0d1420;
+  }
+  body{
+    margin:0;padding:0;background:transparent;
+    min-height:100dvh;overflow-x:hidden;
+    font-family:var(--font);color:var(--ink);line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* fixed sky video background */
+  video.bg{
+    position:fixed;inset:0;width:100%;height:100%;
+    object-fit:cover;z-index:-2;filter:brightness(0.55);
+  }
+  /* dark scrim over video so white text stays legible */
+  .scrim{
+    position:fixed;inset:0;z-index:-1;
+    background:
+      radial-gradient(1100px 620px at 80% -12%, rgba(31,111,147,0.28), transparent 60%),
+      linear-gradient(180deg, rgba(9,13,20,0.62), rgba(9,13,20,0.72));
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{color:#8fd0ea}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+  /* back nav */
+  .topnav{padding:28px 0 0}
+  .back{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:13px;color:var(--muted);padding:6px 2px;
+  }
+  .back:hover{color:var(--ink)}
+  .back svg{width:15px;height:15px}
+
+  /* hero */
+  header.hero{padding:44px 0 34px}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.16em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 18px;
+  }
+  h1{
+    font-size:clamp(30px,5.4vw,44px);font-weight:700;line-height:1.12;
+    letter-spacing:-0.02em;margin:0 0 20px;
+  }
+  .lede{font-size:18px;color:#e9eef3;max-width:64ch;margin:0 0 16px}
+
+  .meta{
+    display:flex;flex-wrap:wrap;gap:14px 28px;
+    padding:18px 20px;margin-top:12px;
+    background:var(--glass);border:1px solid var(--glass-brd);
+    border-radius:var(--radius);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  }
+  .meta div{font-size:14px}
+  .meta .k{
+    font-family:var(--mono);font-size:11px;letter-spacing:0.12em;
+    text-transform:uppercase;color:var(--faint);display:block;margin-bottom:3px;
+  }
+
+  /* contents */
+  nav.toc{
+    margin:36px 0 8px;padding:22px 24px;
+    background:var(--glass);border:1px solid var(--glass-brd);border-radius:var(--radius);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  }
+  nav.toc .label{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--faint);margin-bottom:10px;
+  }
+  nav.toc ol{list-style:none;counter-reset:t;margin:0;padding:0;border-top:1px solid var(--hair)}
+  nav.toc li{counter-increment:t;border-bottom:1px solid var(--hair)}
+  nav.toc li::before{
+    content:counter(t,decimal-leading-zero);
+    font-family:var(--mono);font-size:12px;color:var(--muted);margin-right:14px;
+  }
+  nav.toc a{display:inline-block;color:var(--ink);padding:11px 0;font-weight:500}
+  nav.toc a:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+
+  /* sections */
+  section{padding:50px 0;border-top:1px solid var(--hair)}
+  section .num{font-family:var(--mono);font-size:12px;letter-spacing:0.14em;color:var(--muted)}
+  h2{font-size:clamp(23px,3.6vw,30px);font-weight:700;letter-spacing:-0.01em;margin:8px 0 18px}
+  section p{max-width:66ch;color:#e3e9ef;margin:0 0 16px}
+  section p strong{color:#fff;font-weight:600}
+
+  /* figure */
+  figure{margin:26px 0 0}
+  .shot{
+    display:block;padding:8px;border-radius:var(--radius);
+    background:var(--glass);border:1px solid var(--glass-brd);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    box-shadow:0 18px 40px rgba(0,0,0,0.28);
+  }
+  .shot img{display:block;width:100%;height:auto;border-radius:8px;background:#fff}
+  figcaption{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.55}
+  figcaption .tag{color:rgba(255,255,255,0.92)}
+
+  /* under the hood */
+  .hood{
+    background:var(--glass);border:1px solid var(--glass-brd);border-radius:var(--radius);
+    padding:26px 26px 22px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  }
+  .hood h3{
+    font-size:13px;font-family:var(--mono);font-weight:500;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--faint);margin:0 0 16px;
+  }
+  .hood ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 28px}
+  .hood li{font-size:14.5px;color:#e3e9ef;padding-left:18px;position:relative}
+  .hood li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;border:1.5px solid rgba(255,255,255,0.5);border-radius:2px}
+  .hood li b{color:#fff;font-weight:600}
+
+  footer{padding:44px 0 64px;border-top:1px solid var(--hair);color:var(--muted);font-size:13.5px}
+  footer .mono{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  footer p{max-width:66ch}
+  footer a{color:#fff;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+  footer a:hover{color:#fff;opacity:0.8}
+
+  /* scroll reveal */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media (max-width:600px){
+    .wrap{padding:0 18px}
+    .hood ul{grid-template-columns:1fr}
+    .lede{font-size:16.5px}
+    section{padding:38px 0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;background:#1a2432}
+    video.bg{display:none}
+    .reveal{opacity:1;transform:none;transition:none}
+  }
+</style>
+</head>
+<body>
+
+<video class="bg" autoplay muted loop playsinline>
+  <source src="sky.mp4" type="video/mp4">
+</video>
+<div class="scrim"></div>
+
+<div class="wrap">
+  <div class="topnav">
+    <a class="back" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Portfolio
+    </a>
+  </div>
+
+  <header class="hero reveal">
+    <p class="eyebrow">Data Analysis / Power BI</p>
+    <h1>Sales performance analysis for a bike retailer</h1>
+    <p class="lede">Vaibhav Cycles sells bikes, parts, and accessories across six countries. Leadership had the numbers but no fast way to read them, so I built one report that answers both <strong>how the business is doing</strong> and <strong>why</strong>.</p>
+    <p class="lede">It opens with an executive dashboard for the top line, then moves into diagnostic views that explain what drives sales, where revenue comes from, and how demand clusters. The data is a fictional dataset built for this project.</p>
+    <div class="meta">
+      <div><span class="k">Tools</span>Power BI, DAX, star-schema model</div>
+      <div><span class="k">Techniques</span>Time intelligence, AI visuals, clustering</div>
+      <div><span class="k">Data</span>Fictional (Vaibhav Cycles)</div>
+    </div>
+  </header>
+
+  <nav class="toc reveal">
+    <div class="label">Contents</div>
+    <ol>
+      <li><a href="#exec">Executive view</a></li>
+      <li><a href="#influencers">Key influencers</a></li>
+      <li><a href="#decomp">Decomposition tree</a></li>
+      <li><a href="#clusters">Clustering and grouping</a></li>
+    </ol>
+  </nav>
+
+  <section id="exec" class="reveal">
+    <span class="num">01 / Descriptive</span>
+    <h2>Executive view</h2>
+    <p>Leadership needed one screen to see how the business was doing and where the money came from. This dashboard pairs top-line KPIs with a product-level detail table, a revenue-by-country map, and profit split by category and over time.</p>
+    <p>Slicers let a manager filter by date, region, or subcategory without asking for a new report. Anyone from a store lead to the CFO gets <strong>"how are we doing, and where"</strong> in seconds. Bikes drive the most revenue; accessories carry the higher margins.</p>
+    <figure>
+      <a class="shot" href="images/exec-view.png" target="_blank" rel="noopener"><img src="images/exec-view.png" alt="Executive dashboard: revenue, profit and margin KPIs, product detail table, revenue-by-country map, profit by category and by period"></a>
+      <figcaption><span class="tag">Built:</span> KPI cards, sortable product table, Azure map, donut and trend chart, cross-filtering slicers on date, subcategory and continent.</figcaption>
+    </figure>
+  </section>
+
+  <section id="influencers" class="reveal">
+    <span class="num">02 / Diagnostic</span>
+    <h2>Key influencers</h2>
+    <p>Knowing total sales is not enough, the real question is what actually moves units. This uses Power BI's Key Influencers visual, which runs a model in the background to rank the factors most tied to higher quantity sold.</p>
+    <p>It found that being in the <strong>Accessories</strong> category is the strongest lever, raising average units sold by about nine, with fast-moving items like tubes and patch kits close behind. That is a direct pointer for what to stock and promote.</p>
+    <figure>
+      <a class="shot" href="images/key-influencers.png" target="_blank" rel="noopener"><img src="images/key-influencers.png" alt="Key Influencers visual ranking the factors most associated with higher quantity sold"></a>
+      <figcaption><span class="tag">Reads as:</span> when category is Accessories, average units sold rises by about nine, the top driver, ahead of individual products.</figcaption>
+    </figure>
+  </section>
+
+  <section id="decomp" class="reveal">
+    <span class="num">03 / Drill-down</span>
+    <h2>Decomposition tree</h2>
+    <p>When a number looks off, the next question is always "where is it coming from?" The decomposition tree is an interactive drill-down that breaks total revenue apart along whatever path you pick: country, then category, then customer age group.</p>
+    <p>You can start at <strong>$251M</strong> and click down to, say, Germany, then Accessories, then Young Adults, without writing a new query each time. It turns a static figure into a self-serve investigation.</p>
+    <figure>
+      <a class="shot" href="images/decomposition-tree.png" target="_blank" rel="noopener"><img src="images/decomposition-tree.png" alt="Decomposition tree breaking total revenue down by country, product category and customer age group"></a>
+      <figcaption><span class="tag">Path shown:</span> total revenue, to country, to product category, to age group, expandable in any order the user chooses.</figcaption>
+    </figure>
+  </section>
+
+  <section id="clusters" class="reveal">
+    <span class="num">04 / Segmentation</span>
+    <h2>Clustering and grouping</h2>
+    <p>Not every sales day behaves the same, and the business wanted the patterns found rather than guessed. Clustering groups days automatically by quantity sold and cost, alongside a chart showing how order sizes are distributed.</p>
+    <p>Three clear tiers emerge, <strong>low, mid, and high-volume days</strong>, which can guide staffing and inventory, with most activity landing in the mid-volume range.</p>
+    <figure>
+      <a class="shot" href="images/clustering.png" target="_blank" rel="noopener"><img src="images/clustering.png" alt="Scatter plot showing three automatically detected clusters of sales days, plus a binned histogram of order sizes"></a>
+      <figcaption><span class="tag">Found:</span> three natural segments in the scatter; the histogram confirms demand concentrates in mid-size orders.</figcaption>
+    </figure>
+  </section>
+
+  <section class="reveal">
+    <div class="hood">
+      <h3>Under the hood</h3>
+      <ul>
+        <li><b>Data model:</b> star schema with a sales fact and calendar, product, region and customer dimensions.</li>
+        <li><b>DAX measures:</b> revenue, profit, margin, plus time intelligence such as last-month and percent of total.</li>
+        <li><b>Time intelligence:</b> month-over-month comparisons driven off a dedicated date table.</li>
+        <li><b>AI and ML visuals:</b> Key Influencers, decomposition tree, and automatic clustering.</li>
+        <li><b>Geospatial:</b> revenue mapped by country with continent-level filtering.</li>
+        <li><b>Interaction design:</b> slicers and cross-filtering so one report serves many questions.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <p>Built to show the full life of an analysis question: framing it, deciding what to surface, modelling the data, and checking the story holds. <span class="mono">All figures use a fictional dataset created for this project.</span></p>
+    <p><a href="index.html">&larr; Back to portfolio</a></p>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}
+      });
+    },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(e){io.observe(e);});
+  })();
+</script>
+</body>
+</html>
