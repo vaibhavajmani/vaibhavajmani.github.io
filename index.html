@@ -21,8 +21,8 @@
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Vaibhav Ajmani",
-  "jobTitle": "Product Owner and Business Analyst",
-  "description": "A generalist who works as an analyst, manager, product owner, engineer, and tester across tech, finance, hospitality, and retail. Curious, observant, high agency, and focused on connecting business and technical teams. PMI-ACP and Microsoft Excel Expert certified, with AWS Solutions Architect and Power BI PL-300 in progress.",
+  "jobTitle": "Senior Business Systems Analyst",
+  "description": "Senior business systems analyst who turns complex operations into reliable systems, working across business analysis, product ownership, data, and solution architecture in finance, hospitality, retail, and technology. PMI-ACP and Microsoft Excel Expert certified. CEO Recognition Award recipient, top 1.2% of employees.",
   "knowsAbout": [
     "Business Analysis",
     "Product Ownership",
@@ -132,6 +132,38 @@
     position: relative; z-index: 2; flex: 1;
     display: flex; align-items: center; padding: 56px 0;
   }
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    margin-bottom: 16px;
+  }
+  .proof-strip {
+    position: relative; z-index: 2;
+    list-style: none;
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    max-width: 62ch;
+  }
+  .proof-strip li {
+    font-size: 13px;
+    line-height: 1.4;
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    padding: 7px 12px;
+  }
+  .proof-strip strong { color: #ffffff; font-weight: 700; }
   .hero-content h1 {
     font-weight: 600;
     font-size: clamp(30px, 5.5vw, 46px);
@@ -165,6 +197,83 @@
   }
   .trait-list strong { color: #ffffff; font-weight: 700; }
 
+
+  .years-row {
+    position: relative; z-index: 2;
+    display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 10px;
+    margin-top: 22px;
+  }
+  .years-num, .years-plus {
+    font-size: clamp(38px, 6.5vw, 54px);
+    font-weight: 600; letter-spacing: -0.03em; line-height: 1;
+    color: #ffffff; font-variant-numeric: tabular-nums;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .years-plus { margin-left: -6px; }
+  .years-label {
+    font-size: 17.5px; color: rgba(255,255,255,0.95);
+    text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+  }
+
+  .industry-chips {
+    position: relative; z-index: 2;
+    list-style: none; display: flex; flex-wrap: wrap;
+    gap: 8px 10px; margin-top: 14px; max-width: 62ch;
+  }
+  .industry-chips li {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px; letter-spacing: 0.05em;
+    color: #ffffff;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 4px; padding: 6px 12px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+
+  .domain-cards {
+    position: relative; z-index: 2;
+    list-style: none; display: grid;
+    grid-template-columns: repeat(4, 1fr); gap: 12px;
+    margin-top: 26px; max-width: 64ch;
+  }
+  .domain-cards li {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 10px; padding: 15px 14px;
+  }
+  .dc-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    color: rgba(255,255,255,0.9); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+  .dc-label svg {
+    width: 14px; height: 14px; stroke: #ffffff; stroke-width: 1.6;
+    fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+  }
+  .dc-val {
+    font-size: 24px; font-weight: 600; letter-spacing: -0.02em;
+    line-height: 1.1; color: #ffffff; margin-bottom: 5px;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.28);
+  }
+  .domain-cards li:last-child .dc-val { font-size: 19px; }
+  .dc-cap {
+    font-size: 12.5px; line-height: 1.45;
+    color: rgba(255,255,255,0.88);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+  @media (max-width: 860px) {
+    .domain-cards { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 460px) {
+    .domain-cards { grid-template-columns: 1fr; }
+  }
+
   .hero-closing-wrap {
     position: relative; z-index: 2;
     margin-top: 28px;
@@ -192,22 +301,6 @@
     overflow-x: auto;
   }
 
-  .scroll-cue {
-    position: absolute; bottom: 28px; left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.9);
-    text-shadow: 0 1px 4px rgba(0,0,0,0.25);
-    animation: pulse 2.5s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 0.6; transform: translateX(-50%) translateY(0); }
-    50% { opacity: 1; transform: translateX(-50%) translateY(4px); }
-  }
 
   .hero-content {
     opacity: 0;
@@ -284,6 +377,25 @@
     .roles-grid { grid-template-columns: 1fr; }
   }
 
+  .rhythm-wrap {
+    margin-top: 44px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    max-width: 60ch;
+  }
+  .rhythm-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .rhythm-line {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px; letter-spacing: 0.02em;
+    color: var(--ink);
+    overflow-x: auto;
+  }
+
   .project { padding: 28px 0; border-top: 1px solid var(--line); }
   .project:first-of-type { border-top: none; padding-top: 0; }
   .project-roles {
@@ -294,9 +406,18 @@
   }
   .project p { max-width: 62ch; margin-bottom: 12px; font-size: 18px; line-height: 1.55; }
   .project a.read { font-size: 16px; font-weight: 600; display: inline-block; }
-  .project a.read::after { content: " →"; transition: transform 150ms; display: inline-block; }
+  .project a.read::after { content: " &rarr;"; transition: transform 150ms; display: inline-block; }
   .project a.read:hover { text-decoration: none; }
   .project a.read:hover::after { transform: translateX(3px); }
+  .project-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px !important;
+    line-height: 1.5;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    margin-top: 10px !important;
+    max-width: 62ch;
+  }
 
   .resume-group { margin-bottom: 36px; }
   .resume-group:last-child { margin-bottom: 0; }
@@ -360,6 +481,14 @@
   }
   .book p { font-size: 14.5px; line-height: 1.55; max-width: 62ch; }
 
+  .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 8px; }
+  .feedback-block { margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--line); }
+  .ai-inline-link {
+    background: none; border: none; padding: 0; margin: 0;
+    color: var(--ink); font: inherit; font-size: inherit;
+    text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+  }
+  .ai-inline-link:hover { opacity: 0.75; }
   .feedback-invite { font-size: 16px; max-width: 58ch; margin-bottom: 12px; color: var(--ink); }
   .feedback-sub { font-size: 14.5px; max-width: 58ch; margin-bottom: 28px; }
   .ai-copy-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
@@ -554,79 +683,111 @@
       <a class="site-name" href="index.html">Vaibhav Ajmani</a>
       <nav>
         <a href="#projects">Projects</a>
-        <a href="#resume">Resume</a>
+        <a href="#resume">Impact</a>
+        <a href="#how-i-work">How I work</a>
         <a href="#influences">Influences</a>
-        <a href="#feedback">Feedback</a>
+        <a href="#contact">Contact</a>
       </nav>
     </div>
   </header>
 
   <div class="hero-content">
     <div class="wrap">
-      <h1>A generalist who stays curious.</h1>
-      <p class="intro">A decade as an analyst, manager, product owner, engineer, and tester, across tech, finance, hospitality, and retail.</p>
+      <p class="hero-eyebrow">A generalist who stays curious</p>
+      <h1>I turn complex operations into reliable systems.</h1>
+      <div class="years-row">
+        <span class="years-num" data-count="10">10</span><span class="years-plus">+</span>
+        <span class="years-label">years across</span>
+      </div>
 
-      <ul class="trait-list">
-        <li><strong>Observant:</strong> I learn from what's happening around me and how others handle things.</li>
-        <li><strong>Big picture:</strong> I check how a change will ripple through downstream systems, and build in guardrails so updates stay controlled, not runaway.</li>
-        <li><strong>Prioritization:</strong> I weigh impact on revenue and time dependency, watch for effects on other systems, and communicate expectations early.</li>
-        <li><strong>High agency:</strong> I don't sit on a blocker. I bring it forward with what's needed to decide fast.</li>
-        <li><strong>Builder and operator:</strong> I ship what I plan, and keep it running after launch.</li>
-        <li><strong>Connector:</strong> I translate between business and technical teams, both directions.</li>
+      <ul class="industry-chips">
+        <li>Finance</li>
+        <li>Hospitality</li>
+        <li>Retail</li>
+        <li>Technology</li>
       </ul>
 
-      <div class="hero-closing-wrap">
-        <p class="hero-closing-label">Daily rhythm</p>
-        <p class="hero-closing">listen &gt; confirm &gt; build &gt; feedback &gt; improve &gt; repeat</p>
-      </div>
+      <ul class="domain-cards">
+        <li>
+          <p class="dc-label"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><line x1="15.8" y1="15.8" x2="21" y2="21"/></svg>Business analysis</p>
+          <p class="dc-val"><span data-count="15">15</span>+</p>
+          <p class="dc-cap">stakeholder groups, requirements through deployment and support</p>
+        </li>
+        <li>
+          <p class="dc-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5.3 5.5.7-4 4 1 5.7-5-2.8-5 2.8 1-5.7-4-4 5.5-.7z"/></svg>Product ownership</p>
+          <p class="dc-val"><span data-count="40">40</span>+</p>
+          <p class="dc-cap">sprints owning backlog and release calls</p>
+        </li>
+        <li>
+          <p class="dc-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M2 21h20"/></svg>Data</p>
+          <p class="dc-val"><span data-count="8">8</span>M+</p>
+          <p class="dc-cap">monthly records analysed in SQL</p>
+        </li>
+        <li>
+          <p class="dc-label"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="8,6 3,12 8,18"/><polyline points="16,6 21,12 16,18"/></svg>Solution architecture</p>
+          <p class="dc-val">24h to 30m</p>
+          <p class="dc-cap">pipeline latency after re-architecture</p>
+        </li>
+      </ul>
+
+      <ul class="proof-strip">
+        <li><strong>CEO Recognition Award</strong> &middot; top 1.2% of employees</li>
+        <li><strong>PMI-ACP</strong> &amp; Microsoft Excel Expert certified</li>
+      </ul>
+
+
+
     </div>
   </div>
 
-  <div class="scroll-cue" aria-hidden="true">Scroll</div>
-</div>
+  </div>
 
 <div class="below-hero">
 <main>
 
   <section id="how-i-work">
     <div class="wrap">
-      <p class="section-label">How I work</p>
+      <p class="section-label">Five lenses I use</p>
       <div class="roles-grid">
         <div class="role">
           <div class="role-label">
             <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><line x1="15.8" y1="15.8" x2="21" y2="21"/></svg>
             Analyst
           </div>
-          <p>I dig into how work actually happens before proposing what should change.</p>
+          <p>I study how work actually happens before proposing what should change.</p>
         </div>
         <div class="role">
           <div class="role-label">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.2"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
-            Manager
+            Leader
           </div>
-          <p>I set direction for a team, define clear expectations and responsibilities, and stay available if someone gets stuck.</p>
+          <p>I set direction, clarify responsibilities, and stay available when someone gets stuck.</p>
         </div>
         <div class="role">
           <div class="role-label">
             <svg viewBox="0 0 24 24"><path d="M12 3l2.5 5.3 5.5.7-4 4 1 5.7-5-2.8-5 2.8 1-5.7-4-4 5.5-.7z"/></svg>
             Owner
           </div>
-          <p>I decide what to build first, what to defer, and what to leave out, and say why.</p>
+          <p>I decide what to build first, what to defer, and what to leave out, and explain why.</p>
         </div>
         <div class="role">
           <div class="role-label">
             <svg viewBox="0 0 24 24"><polyline points="8,6 3,12 8,18"/><polyline points="16,6 21,12 16,18"/></svg>
-            Engineer
+            System designer
           </div>
-          <p>I design and build systems that run reliably without a person watching them.</p>
+          <p>I design workflows and integrations that run reliably without constant supervision.</p>
         </div>
         <div class="role">
           <div class="role-label">
             <svg viewBox="0 0 24 24"><path d="M3.5 12.5l5.5 5.5 11.5-12"/></svg>
             Tester
           </div>
-          <p>I define what "working" means up front, then check the result against it.</p>
+          <p>I define what "working" means up front, then validate the result against it.</p>
         </div>
+      </div>
+      <div class="rhythm-wrap">
+        <p class="rhythm-label">Daily rhythm</p>
+        <p class="rhythm-line">listen &gt; confirm &gt; decide &gt; build &gt; validate &gt; improve</p>
       </div>
     </div>
   </section>
@@ -636,24 +797,27 @@
       <p class="section-label">Projects</p>
 
       <div class="project">
-        <div class="project-roles">Analyst · Owner</div>
-        <h3>v-AIFlow: closing the gap between sales and support</h3>
-        <p>A SaaS company was losing customers because its sales and support teams worked from different systems. This case study walks through the problem, the options considered, and a phased plan to fix it.</p>
+        <div class="project-roles">Analyst &middot; Owner</div>
+        <h3>FlowBridge: closing the gap between sales and support</h3>
+        <p>A SaaS company was losing customers because sales and support worked from different systems. I mapped the handoff failures, evaluated the available options, and developed a phased plan to establish shared customer context without disrupting active workflows.</p>
         <a href="v-AIFlow.html">Read the case study &rarr;</a>
+        <p class="project-note">Independent case study using a fictional company and realistic industry constraints.</p>
       </div>
 
       <div class="project">
-        <div class="project-roles">Analyst · Engineer</div>
+        <div class="project-roles">Analyst &middot; Data</div>
         <h3>Sales analytics in Power BI</h3>
-        <p>A bike retailer had the numbers but no fast way to read them. One report shows how the business is doing; three analytics views explain why: what drives sales, where revenue comes from, and how demand clusters.</p>
+        <p>A bike retailer had the numbers but no fast way to interpret them. I built an executive performance view plus three analytical pages that explain what drives sales, which markets and products generate revenue, and how demand clusters across customers.</p>
         <a href="data-analysis.html">Explore the report &rarr;</a>
+        <p class="project-note">Built on a public sample dataset. The data model, measures, design, and narrative are my own.</p>
       </div>
 
       <div class="project">
-        <div class="project-roles">Engineer · Tester</div>
-        <h3>A sales data pipeline that runs itself</h3>
-        <p>A retail chain needed inventory adjustments moved from its point-of-sale SaaS to a central API nightly - accurately, securely, and without manual steps. This project shows the design, the safeguards, and the reasoning behind each choice.</p>
+        <div class="project-roles">System designer &middot; Tester</div>
+        <h3>A nightly inventory integration with built-in safeguards</h3>
+        <p>A retail chain needed inventory adjustments moved from its point-of-sale SaaS to a central API every night, accurately, securely, and without manual steps. I designed the pipeline, the safeguards against bad or duplicate data, and documented the reasoning behind each choice.</p>
         <a href="architecture.html">See it run &rarr;</a>
+        <p class="project-note">Names and identifying details are fictionalized. The constraints and design patterns reflect real enterprise work.</p>
       </div>
 
     </div>
@@ -665,37 +829,37 @@
     <h2>Credentials at a glance</h2>
  
     <div class="resume-cta">
-      <a class="resume-download" href="resume.pdf" download>Download resume (PDF)</a>
-      <button class="resume-alt" type="button" id="rOpen">Or have it sent to your inbox</button>
+      <a class="resume-download" href="resume.pdf" download="Senior Analyst - Vaibhav Ajmani - Resume.pdf">Download resume (PDF)</a>
+      <a class="resume-download" href="https://linkedin.com/in/vaibhav-ajmani" target="_blank" rel="noopener">View LinkedIn</a>
     </div>
  
     <p class="resume-group-label">Impact at a glance</p>
-    <p style="margin-bottom: 24px; max-width: 60ch; opacity: 0.68;">Enterprise hospitality billing platform, 2023 to present.</p>
+    <p style="margin-bottom: 24px; max-width: 60ch; opacity: 0.68;">Selected scale and outcomes from my work supporting an enterprise hospitality billing platform, 2023 to present.</p>
  
     <div class="metrics">
+      <div class="metric">
+        <p class="metric-val" data-to="1.5" data-pre="$" data-post="M+" data-dec="1">$1.5M+</p>
+        <p class="metric-cap">Billing exposure identified or protected through controls</p>
+      </div>
+      <div class="metric">
+        <p class="metric-val">24h to 30m</p>
+        <p class="metric-cap">Data latency reduced after re-architecture</p>
+      </div>
+      <div class="metric">
+        <p class="metric-val" data-to="5" data-post=" quarters">5 quarters</p>
+        <p class="metric-cap">Consecutive quarters with no control exceptions</p>
+      </div>
       <div class="metric">
         <p class="metric-val" data-to="700" data-pre="$" data-post="M">$700M</p>
         <p class="metric-cap">Annual billing revenue supported</p>
       </div>
       <div class="metric">
         <p class="metric-val" data-to="8" data-post="M+">8M+</p>
-        <p class="metric-cap">Transactions processed monthly</p>
+        <p class="metric-cap">Monthly transactions supported</p>
       </div>
       <div class="metric">
         <p class="metric-val" data-to="7000" data-post="+" data-comma="1">7,000+</p>
         <p class="metric-cap">Properties served</p>
-      </div>
-      <div class="metric">
-        <p class="metric-val" data-to="1.5" data-pre="$" data-post="M+" data-dec="1">$1.5M+</p>
-        <p class="metric-cap">Revenue protected through controls</p>
-      </div>
-      <div class="metric">
-        <p class="metric-val">24h to 30m</p>
-        <p class="metric-cap">Data latency after re-architecture</p>
-      </div>
-      <div class="metric">
-        <p class="metric-val" data-to="5" data-post=" quarters">5 quarters</p>
-        <p class="metric-cap">Consecutive clean audit results</p>
       </div>
     </div>
  
@@ -705,27 +869,23 @@
         <li>
           <div>
             <span class="cert-name">PMI Agile Certified Practitioner (PMI-ACP)&reg;</span>
-            <span class="cert-id">3421219</span>
           </div>
         </li>
         <li>
           <div>
             <span class="cert-name">Microsoft Excel Expert</span>
-            <span class="cert-id">I246-6309</span>
           </div>
         </li>
       </ul>
     </div>
     <div class="resume-group">
-      <p class="resume-group-label">In Progress</p>
+      <p class="resume-group-label">Currently preparing for</p>
       <ul class="resume-list">
         <li>
-          <span class="cert-name">Power BI PL-300</span>
-          <span class="cert-meta">Target: Q3 2026</span>
+          <span class="cert-name">Microsoft Power BI Data Analyst (PL-300)</span>
         </li>
         <li>
-          <span class="cert-name">AWS Certified Solutions Architect</span>
-          <span class="cert-meta">Target: Q4 2026</span>
+          <span class="cert-name">AWS Certified Solutions Architect &ndash; Associate</span>
         </li>
       </ul>
     </div>
@@ -741,14 +901,14 @@
     <div class="resume-group">
       <p class="resume-group-label">Education</p>
       <div class="edu-entry">
-        <div class="edu-degree">Master of Science, Information Technology, Data Management &amp; Analytics</div>
-        <div class="edu-school">Washington University of Science and Technology, Vienna, Virginia, United States of America</div>
-        <div class="edu-meta">GPA 4.0 &middot; March 2023</div>
+        <div class="edu-degree">M.S., Information Technology &ndash; Data Management &amp; Analytics</div>
+        <div class="edu-school">Washington University of Science and Technology &middot; Vienna, VA</div>
+        <div class="edu-meta">GPA 4.0 &middot; 2023</div>
       </div>
       <div class="edu-entry">
-        <div class="edu-degree">Bachelor of Business Administration, Project Management</div>
-        <div class="edu-school">Washington University of Science and Technology, Vienna, Virginia, United States of America</div>
-        <div class="edu-meta">GPA 3.94 &middot; June 2020</div>
+        <div class="edu-degree">B.B.A., Project Management</div>
+        <div class="edu-school">Washington University of Science and Technology &middot; Vienna, VA</div>
+        <div class="edu-meta">GPA 3.94 &middot; 2020</div>
       </div>
     </div>
   </div>
@@ -779,6 +939,7 @@
 (function () {
   var ENDPOINT = "https://formspree.io/f/mkodzyka";
   var FILE = "resume.pdf";
+  var DOWNLOAD_NAME = "Senior Analyst - Vaibhav Ajmani - Resume.pdf";
  
   var modal = document.getElementById("rModal");
   var form = document.getElementById("rForm");
@@ -804,13 +965,14 @@
   function download() {
     var a = document.createElement("a");
     a.href = FILE;
-    a.download = "";
+    a.download = DOWNLOAD_NAME;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   }
  
-  document.getElementById("rOpen").addEventListener("click", open);
+  var rOpenBtn = document.getElementById("rOpen");
+  if (rOpenBtn) rOpenBtn.addEventListener("click", open);
   document.getElementById("rCancel").addEventListener("click", close);
  
   modal.addEventListener("click", function (e) {
@@ -909,7 +1071,7 @@
           <span class="title">Thinking in Systems</span>
           <span class="author">Donella Meadows</span>
         </div>
-        <p>Reset how I approach any problem: behaviour before structure, feedback loops before fixes. Taught me that leverage points are almost never where they appear to be.</p>
+        <p>Reset how I approach any problem: behaviour before structure, feedback loops before fixes. Taught me that leverage points are almost never where they appear to be. It shaped how I model dependencies and handoffs in the FlowBridge case study.</p>
       </div>
 
       <div class="book">
@@ -933,7 +1095,7 @@
           <span class="title">The Signal and the Noise</span>
           <span class="author">Nate Silver</span>
         </div>
-        <p>Distinguishes what a number is telling you from what you want it to tell you. Made me slower with data and quicker to say "I don't know yet." Useful before any dashboard is built.</p>
+        <p>Distinguishes what a number is telling you from what you want it to tell you. Made me slower with data and quicker to say "I don't know yet." It influenced how the Power BI report separates performance indicators from diagnostic views.</p>
       </div>
 
       <div class="book">
@@ -955,17 +1117,21 @@
     </div>
   </section>
 
-  <section id="feedback">
+  <section id="contact">
     <div class="wrap">
-      <p class="section-label">Feedback</p>
-      <h2>Tell me what to change</h2>
-      <p class="feedback-invite">Feedback keeps this honest. A single line is welcome, and comprehensive notes are most welcome. What worked, what didn't, what you'd change, all of it is useful.</p>
-      <p class="feedback-sub">Human feedback, LLM feedback, or both are welcome. Feel free to copy this page into your favorite AI tool and share what it tells you.</p>
-
-      <div class="ai-copy-row">
-        <button id="copy-for-ai" type="button">Copy this page for AI review</button>
-        <span id="copy-confirm" role="status" aria-live="polite"></span>
+      <p class="section-label">Let's talk</p>
+      <h2>Open to new roles</h2>
+      <p class="feedback-invite">I'm interested in senior business, systems, and technical analyst roles, plus product ownership, where business context and technical execution need to meet.</p>
+      <div class="contact-actions">
+        <a class="resume-download" href="mailto:vaiajm2793@gmail.com">Email me</a>
+        <a class="resume-download" href="https://linkedin.com/in/vaibhav-ajmani" target="_blank" rel="noopener">View LinkedIn</a>
+        <a class="resume-download" href="resume.pdf" download="Senior Analyst - Vaibhav Ajmani - Resume.pdf">Download resume</a>
       </div>
+
+      <div class="feedback-block">
+        <p class="section-label" style="margin-top:8px;">Share portfolio feedback</p>
+        <p class="feedback-invite">Feedback keeps this honest. A single line is welcome, and detailed notes are appreciated.</p>
+        <p class="feedback-sub">Human or AI feedback both welcome. <button id="copy-for-ai" type="button" class="ai-inline-link">Review this portfolio with an AI tool</button><span id="copy-confirm" role="status" aria-live="polite"></span></p>
 
       <form class="feedback" action="https://formspree.io/f/mkodzyka" method="POST">
         <div>
@@ -986,6 +1152,7 @@
         </div>
         <p class="form-note">Goes straight to my inbox.</p>
       </form>
+      </div>
     </div>
   </section>
 
@@ -994,9 +1161,8 @@
 
 <footer>
   <div class="wrap">
-    <p>Projects use fictional companies inspired by real-world industry patterns.</p>
-    <p>Built and written by Vaibhav and Claude Opus 4.8.</p>
-    <p>V-AI. All rights reserved.</p>
+    <p>Designed, built, and edited by Vaibhav Ajmani. AI tools were used for critique and iteration.</p>
+    <p>&copy; Vaibhav Ajmani. All rights reserved.</p>
   </div>
 </footer>
 
@@ -1057,6 +1223,34 @@
         confirmEl.textContent = 'Could not copy automatically. Please select and copy the page manually.';
       }
     });
+  })();
+</script>
+
+<script>
+  (function() {
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var els = document.querySelectorAll(".years-num[data-count], .dc-val span[data-count]");
+    if (!els.length) return;
+    if (reduced) return;
+
+    function run(el) {
+      var target = parseFloat(el.getAttribute("data-count"));
+      var t0 = null;
+      function step(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / 1100, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = String(Math.round(target * eased));
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = String(target);
+      }
+      el.textContent = "0";
+      requestAnimationFrame(step);
+    }
+
+    setTimeout(function() {
+      els.forEach(run);
+    }, 450);
   })();
 </script>
 
