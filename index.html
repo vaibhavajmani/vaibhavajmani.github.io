@@ -246,14 +246,17 @@
   .dc-label {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px; font-weight: 500;
+    line-height: 1.35;
     letter-spacing: 0.07em; text-transform: uppercase;
     color: rgba(255,255,255,0.9); margin-bottom: 10px;
-    display: flex; align-items: center; gap: 6px;
+    min-height: 2.7em;
+    display: flex; align-items: flex-start; gap: 6px;
     text-shadow: 0 1px 4px rgba(0,0,0,0.25);
   }
   .dc-label svg {
     width: 14px; height: 14px; stroke: #ffffff; stroke-width: 1.6;
-    fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+    fill: none; stroke-linecap: round; stroke-linejoin: round;
+    flex-shrink: 0; margin-top: 1px;
   }
   .dc-val {
     font-size: 24px; font-weight: 600; letter-spacing: -0.02em;
@@ -809,7 +812,7 @@
         <h3>Sales analytics in Power BI</h3>
         <p>A bike retailer had the numbers but no fast way to interpret them. I built an executive performance view plus three analytical pages that explain what drives sales, which markets and products generate revenue, and how demand clusters across customers.</p>
         <a href="data-analysis.html">Explore the report &rarr;</a>
-        <p class="project-note">Built on a public sample dataset. The data model, measures, design, and narrative are my own.</p>
+        <p class="project-note">Built on a fictional dataset created for this project. The data model, measures, design, and narrative are my own.</p>
       </div>
 
       <div class="project">
